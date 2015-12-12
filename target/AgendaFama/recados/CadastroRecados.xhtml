@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	<f:metadata>
+		<f:event listener="#{cadastroRecadoBean.inicializar}"
+			type="preRenderView" />
+	</f:metadata>
+
+	<ui:define name="titulo">Envio de recados por E-mail</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Envio de recados por E-mail</h1>
+		<p:messages autoUpdate="true" closable="true" />
+		<h:form id="frm">
+
+			<p:toolbar style="margin-top: 20px">
+
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/recados/CadastroRecados" />
+					<p:separator />
+					<p:commandButton value="Enviar"
+						action="#{cadastroRecadoBean.enviar}" update="@form"
+						process="@form" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:tabView style="margin-top: 20px">
+
+				<p:tab title="Dados de Envio">
+
+					<p:panelGrid  columns="3" id="pnl">
+					
+						<p:outputLabel value="Remetente"/>
+						<h:panelGroup>
+							<p:outputLabel value="E-mail"/>
+							<p:inputText size="50" style="margin-left: 5px"
+								value="#{cadastroRecadoBean.recado.email}" label="E-mail"/>
+						</h:panelGroup>
+						<h:panelGroup>
+							<p:outputLabel value="Senha"/>
+							<p:password size="13" style="margin-left: 5px"
+								value="#{cadastroRecadoBean.recado.senha}" label="Senha"/>
+						</h:panelGroup>
+
+						<p:outputLabel value="Destinatário(s)" />
+						
+						<p:selectOneMenu value="#{cadastroRecadoBean.novoUsuario}" 
+							style="margin-left: 42px">
+							<f:selectItem itemLabel="Todos os colaboradores" />
+							<f:selectItems value="#{cadastroRecadoBean.todosUsuarios}"
+								var="user" itemValue="#{user}" itemLabel="#{user.nome}" />
+						</p:selectOneMenu>
+						<h:panelGroup>
+						<p:commandButton icon="ui-icon-circle-plus" 
+							action="#{cadastroRecadoBean.adicionarUsuario}" process="pnl"
+							update=":frm:tabelaUsuarios" />
+							<h:outputText value="(Click ao lado para add)"/>
+						</h:panelGroup>
+
+					</p:panelGrid>
+					<h4>Obs.: O envio de e-mails pode demorar alguns segundos. Aguarde o recebimento da confirmação!</h4>
+					<p:panelGrid columnClasses="rotulo" columns="2"
+						style="width: 100%;">
+
+
+
+						<p:outputLabel value="Assunto" />
+						<p:inputText size="50" label="Assunto"
+							value="#{cadastroRecadoBean.recado.assunto}" />
+
+						<p:outputLabel value="Título (opcional)" />
+						<p:inputText size="50" value="#{cadastroRecadoBean.recado.titulo}" />
+
+						<p:outputLabel value="Descrição" />
+						<p:inputTextarea value="#{cadastroRecadoBean.recado.descricao}"
+							style="width: 100%; heigth: 50%" autoResize="false" />
+
+					</p:panelGrid>
+
+				</p:tab>
+
+			</p:tabView>
+
+			<p:dataTable style="margin-top: 20px; width: 100%" paginator="true"
+				paginatorAlwaysVisible="false" rows="5" var="usuario"
+				id="tabelaUsuarios"
+				emptyMessage="Todos os colaboradores adicionados."
+				value="#{cadastroRecadoBean.usuariosAdicionados}">
+
+				<p:column headerText="Nome">
+					<h:outputText value="#{usuario.nome}" />
+				</p:column>
+
+				<p:column headerText="E-mail">
+					<h:outputText value="#{usuario.email}" />
+				</p:column>
+
+				<p:column style="width: 10%; text-align: center">
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						process="@this" update=":frm:tabelaUsuarios"
+						action="#{cadastroRecadoBean.removerUsuario}">
+						<f:setPropertyActionListener
+							target="#{cadastroRecadoBean.usuarioSelecionado}"
+							value="#{usuario}" />
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

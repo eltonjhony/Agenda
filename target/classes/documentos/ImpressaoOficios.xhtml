@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	<f:metadata>
+		<f:event listener="#{emissaoOficioBean.inicializar}"
+			type="preRenderView" />
+	</f:metadata>
+
+	<ui:define name="titulo">Catálogo de Ofícios disponíveis para Impressão</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Catálogo de Ofícios disponíveis para Impressão</h1>
+		<h:form target="_blank">
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/documentos/Oficios.xhtml" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:commandButton value="Renderizar Catálogo"
+						outcome="/documentos/Oficios.xhtml" icon="ui-icon-wrench"
+						oncomplete="dialogRend.show()" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:dataTable style="margin-top: 20px" paginator="true" rows="5"
+				emptyMessage="Nenhum ofício disponível"
+				value="#{emissaoOficioBean.listaOficios}" var="oficio">
+
+				<f:facet name="header">
+					<h:outputText value="Ofícios disponíveis" />
+				</f:facet>
+
+				<p:column headerText="Nº do ofício" style="text-align: center">
+					<h:outputText value="#{oficio.numero}" />
+				</p:column>
+
+				<p:column headerText="Data de Emissão" style="text-align: center">
+					<h:outputText value="#{oficio.dataEmissao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Assunto">
+					<h:outputText value="#{oficio.assunto}" />
+				</p:column>
+
+				<p:column style="text-align: center">
+					<p:commandButton icon="ui-icon-print" title="Imprimir"
+						action="#{emissaoOficioBean.emitir}" ajax="false" process="@form">
+						<f:setPropertyActionListener target="#{emissaoOficioBean.oficio}"
+							value="#{oficio}" />
+					</p:commandButton>
+					<p:button icon="ui-icon-pencil" title="Editar"
+						outcome="/documentos/Oficios">
+						<f:param name="oficio" value="#{oficio.id}" />
+					</p:button>
+
+				</p:column>
+
+			</p:dataTable>
+
+			<p:confirmDialog widgetVar="dialogRend" closable="false"
+				message="A renderização só é necessária antes da primeira emissão de Ofício do ano corrente. 
+					Se esta ação não preencher este requisito aborte a operação pressionando 'NÃO'!"
+				header="ATENÇÃO!! Tem certeza que deseja continuar?">
+
+				<p:commandButton value="Sim"
+					action="#{emissaoOficioBean.renderizar}"
+					oncomplete="dialogRend.hide();" update="@form" />
+				<p:commandButton value="Não"
+					oncomplete="dialogRend.hide(); return false" />
+
+			</p:confirmDialog>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

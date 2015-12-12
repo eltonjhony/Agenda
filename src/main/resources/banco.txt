@@ -1,0 +1,60 @@
+INSERT INTO departamentos (descricao) VALUES ('Unidade de Armazenamento');
+
+INSERT INTO departamentos (descricao) VALUES ('Almoxarifado');
+
+INSERT INTO departamentos (descricao) VALUES ('Agrícola');
+
+INSERT INTO departamentos (descricao) VALUES ('Associação');
+
+INSERT INTO departamentos (descricao) VALUES ('Spaço Motos');
+
+INSERT INTO departamentos (descricao) VALUES ('Administração');
+
+
+INSERT INTO departamentos (descricao,departamento_pai_id) VALUES ('Diretoria',6);
+
+INSERT INTO departamentos (descricao,departamento_pai_id) VALUES ('Gerência',6);
+
+INSERT INTO departamentos (descricao,departamento_pai_id) VALUES ('Recepção',6);
+
+INSERT INTO departamentos (descricao,departamento_pai_id) VALUES ('Recursos Humanos',6);
+
+INSERT INTO departamentos (descricao,departamento_pai_id) VALUES ('Financeiro',6);
+
+INSERT INTO departamentos (descricao,departamento_pai_id) VALUES ('Contabilidade',6);
+
+
+INSERT INTO grupos (descricao,nome) VALUES ('Super Usuário','SUPER USUARIO');
+
+INSERT INTO grupos (descricao,nome) VALUES ('Unidade de Armazenamento','UNIDADE DE ARMAZENAMENTO');
+
+INSERT INTO grupos (descricao,nome) VALUES ('Almoxarifado','ALMOXARIFADO');
+
+INSERT INTO grupos (descricao,nome) VALUES ('Agrícola','AGRICOLA');
+
+INSERT INTO grupos (descricao,nome) VALUES ('Associação','ASSOCIACAO');
+
+INSERT INTO grupos (descricao,nome) VALUES ('Spaço Motos','SPACO MOTOS');
+
+INSERT INTO grupos (descricao,nome) VALUES ('Administração','ADMINISTRACAO');
+
+
+INSERT INTO faixas (descricao) VALUES ('Infantil - 0 a 9 anos');
+
+
+
+INSERT INTO faixas (descricao) VALUES ('InfantoJuvenil - 10 a 17 anos');
+
+
+
+INSERT INTO faixas (descricao) VALUES ('Adulto - 18 a 59 anos');
+
+INSERT INTO faixas (descricao) VALUES ('Terceira Idade');
+
+
+INSERT INTO usuarios (dt_criacao,email,nome,nome_usuario,senha) VALUES ('2014-11-27','e_oliveira12@outlook.com','Elton','Elton','admin');
+
+INSERT INTO usuario_grupo (usuario_id,grupo_id) VALUES (1,1);
+
+
+ 

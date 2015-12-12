@@ -1,0 +1,265 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	<f:metadata>
+		<f:event listener="#{cadastroContatoBean.inicilizar}"
+			type="preRenderView" />
+		<o:viewParam name="contato" value="#{cadastroContatoBean.contato}" />
+		<o:viewParam name="visualizacao"
+			value="#{cadastroContatoBean.contato.visualizacao}"></o:viewParam>
+	</f:metadata>
+
+	<ui:define name="titulo">#{cadastroContatoBean.editando ? 'Edição de Contato' : 'Novo Contato'}</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>#{cadastroContatoBean.editando ? 'Edição de Contato' : 'Novo
+			Contato'}</h1>
+		<p:messages id="mensagem" closable="true" />
+
+		<h:form id="frm2">
+			<p:toolbar style="margin-top: 20px">
+
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/contatos/CadastroContatos" />
+					<p:separator />
+					<p:commandButton value="Salvar"
+						action="#{cadastroContatoBean.salvar}" update="@form :mensagem"
+						process="@form"
+						disabled="#{cadastroContatoBean.contato.visualizando}" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisar" outcome="/contatos/PesquisaContatos" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+
+
+			<p:tabView style="margin-top: 20px" id="tabView">
+
+				<p:tab title="Dados Principais">
+
+
+					<p:panelGrid columnClasses="rotulo" columns="2"
+						style="margin-top: 10px; width: 100%">
+
+						<p:outputLabel value="Tipo" />
+						<p:selectOneRadio value="#{cadastroContatoBean.contato.tipo}"
+							id="radioTipo" label="Tipo">
+							<p:ajax update="labels inputs tabelaContatos" process="@this"
+								event="change" listener="#{cadastroContatoBean.limparListagem}" />
+							<f:selectItems value="#{cadastroContatoBean.tipoPessoa}"
+								var="pes" itemLabel="#{pes.descricao}" itemValue="#{pes}" />
+						</p:selectOneRadio>
+
+						<h:panelGroup id="labels">
+							<p:outputLabel value="Nome" for="nome"
+								rendered="#{cadastroContatoBean.contato.tipo eq 'FISICA'}" />
+							<p:outputLabel value="Empresa" for="empresa"
+								rendered="#{cadastroContatoBean.contato.tipo eq 'JURIDICA'}" />
+						</h:panelGroup>
+
+						<h:panelGroup id="inputs">
+							<p:inputText id="nome" size="50"
+								rendered="#{cadastroContatoBean.contato.tipo eq 'FISICA'}"
+								value="#{cadastroContatoBean.contato.nome}" label="Nome" />
+							<p:inputText id="empresa" size="50"
+								rendered="#{cadastroContatoBean.contato.tipo eq 'JURIDICA'}"
+								value="#{cadastroContatoBean.contato.nome}" label="Empresa" />
+						</h:panelGroup>
+
+						<p:outputLabel value="Apelido" for="apelido" />
+						<p:inputText id="apelido" size="50"
+							value="#{cadastroContatoBean.contato.apelido}" />
+
+					</p:panelGrid>
+
+
+					<p:commandButton value="Adicionar Forma de Contato"
+						oncomplete="dialogContato.show()"
+						process="@this" 
+						update=":frmDialog"
+						style="margin-top: 10px"
+						disabled="#{cadastroContatoBean.contato.visualizando}" />
+
+
+					<p:dataTable emptyMessage="Nenhuma forma de contato adicionada."
+						value="#{cadastroContatoBean.listaFormaContatos}" var="contato"
+						id="tabelaContatos" style="margin-top: 10px">
+
+
+						<p:column headerText="Nome" width="20%">
+							<h:outputText value="#{contato.nome}" />
+						</p:column>
+
+						<p:column headerText="E-mail" width="30%">
+							<h:outputText value="#{contato.email}" />
+						</p:column>
+
+						<p:column headerText="Telefone" width="20%">
+							<h:outputText value="#{contato.telefone}" />
+						</p:column>
+
+						<p:column headerText="Celular" width="20%">
+							<h:outputText value="#{contato.celular}" />
+						</p:column>
+
+						<p:column width="10%" style="text-align: center">
+							<p:commandButton title="Editar" icon="ui-icon-pencil"
+								oncomplete="dialogContatoEditar.show()" process="@this"
+								update=":frmDialog:dialogContatoEditar">
+								<f:setPropertyActionListener
+									target="#{cadastroContatoBean.formaContatoSelecionado}"
+									value="#{contato}" />
+							</p:commandButton>
+							<p:commandButton icon="ui-icon-trash" title="Excluir"
+								oncomplete="dialogExcluir.show()" process="@this">
+								<f:setPropertyActionListener
+									target="#{cadastroContatoBean.formaContatoSelecionado}"
+									value="#{contato}" />
+							</p:commandButton>
+						</p:column>
+
+					</p:dataTable>
+
+
+				</p:tab>
+
+				<p:tab title="Observações">
+
+					<h:panelGrid columnClasses="rotulo" columns="1"
+						style="margin-top: 10px; width: 100%">
+
+						<p:outputLabel value="Observações" style="font-size: 13px" />
+						<p:inputTextarea style="height: 90px; width: 100%"
+							value="#{cadastroContatoBean.contato.observacao}" />
+
+					</h:panelGrid>
+
+				</p:tab>
+
+				<p:tab title="Dados Extras"
+					rendered="#{cadastroContatoBean.editando}">
+
+					<p:panelGrid style="width: 100%" columnClasses="rotulo,campo"
+						columns="2">
+
+						<p:outputLabel value="Cadastrado por:" />
+						<h:outputText value="#{cadastroContatoBean.contato.usuario.nome}" />
+
+						<p:outputLabel value="Data da Operação:" />
+						<h:outputText value="#{cadastroContatoBean.contato.dataCriacao}">
+							<f:convertDateTime pattern="dd/MM/yyyy - HH:mm" />
+						</h:outputText>
+
+					</p:panelGrid>
+
+				</p:tab>
+
+			</p:tabView>
+
+		</h:form>
+
+		<h:form id="frmDialog">
+
+			<p:confirmDialog widgetVar="dialogExcluir" id="dialogExcluir"
+				header="Confirmação de Remoção"
+				message="Deseja realmente remover esta forma de contato?">
+
+				<p:commandButton value="Sim"
+					action="#{cadastroContatoBean.removerFormaContato}"
+					update=":frm2:tabView:tabelaContatos :msg" process="@this"
+					oncomplete="dialogExcluir.hide()" />
+				<p:commandButton value="Não"
+					oncomplete="dialogExcluir.hide(); return false;" />
+
+			</p:confirmDialog>
+
+
+
+			<p:dialog widgetVar="dialogContato" draggable="false"
+				resizable="false" appendToBody="@(body)" modal="true"
+				header="Adicione uma forma de Contato" id="dialogContato">
+
+				<p:panelGrid columns="2" style="margin-top: 5px"
+					styleClass="semBorda" id="painelContato">
+
+					<p:outputLabel value="Nome"
+						rendered="#{cadastroContatoBean.contato.tipo eq 'JURIDICA'}" />
+					<p:inputText value="#{cadastroContatoBean.formaContato.nome}"
+						size="30"
+						rendered="#{cadastroContatoBean.contato.tipo eq 'JURIDICA'}" />
+
+					<p:outputLabel value="E-mail" />
+					<p:inputText value="#{cadastroContatoBean.formaContato.email}"
+						size="30" label="E-mail" />
+
+					<p:outputLabel value="Telefone" />
+					<p:inputMask size="10" mask="(99)9999-9999"
+						value="#{cadastroContatoBean.formaContato.telefone}"
+						label="Telefone" />
+
+					<p:outputLabel value="Celular" />
+					<p:inputMask size="10" mask="(99)99999-9999"
+						value="#{cadastroContatoBean.formaContato.celular}"
+						label="Celular" />
+
+					<p:commandButton value="Adicionar" style="margin-top: 5px"
+						action="#{cadastroContatoBean.adicionarFormaContato}"
+						update=":frm2:tabView:tabelaContatos :msg" process="painelContato"
+						oncomplete="dialogContato.hide();" />
+
+				</p:panelGrid>
+
+			</p:dialog>
+
+			<p:dialog widgetVar="dialogContatoEditar" draggable="false"
+				resizable="false" appendToBody="@(body)" modal="true"
+				header="Edição de forma de Contato" id="dialogContatoEditar">
+
+				<p:panelGrid columns="2" style="margin-top: 5px"
+					styleClass="semBorda" id="painelContatoEditar">
+
+					<p:outputLabel value="Nome"
+						rendered="#{cadastroContatoBean.contato.tipo eq 'JURIDICA'}" />
+					<p:inputText
+						value="#{cadastroContatoBean.formaContatoSelecionado.nome}"
+						size="30"
+						rendered="#{cadastroContatoBean.contato.tipo eq 'JURIDICA'}" />
+
+					<p:outputLabel value="E-mail" />
+					<p:inputText
+						value="#{cadastroContatoBean.formaContatoSelecionado.email}"
+						size="30" label="E-mail" />
+
+					<p:outputLabel value="Telefone" />
+					<p:inputMask size="10" mask="(99)9999-9999"
+						value="#{cadastroContatoBean.formaContatoSelecionado.telefone}"
+						label="Telefone" />
+
+					<p:outputLabel value="Celular" />
+					<p:inputMask size="10" mask="(99)99999-9999"
+						value="#{cadastroContatoBean.formaContatoSelecionado.celular}"
+						label="Celular" />
+
+					<p:commandButton value="Adicionar" style="margin-top: 5px"
+						action="#{cadastroContatoBean.adicionarFormaContato}"
+						update=":frm2:tabView:tabelaContatos :msg" process="painelContatoEditar"
+						oncomplete="dialogContatoEditar.hide();" />
+
+				</p:panelGrid>
+
+			</p:dialog>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

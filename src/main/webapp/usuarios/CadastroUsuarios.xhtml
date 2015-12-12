@@ -1,0 +1,148 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	<f:metadata>
+		<f:event listener="#{cadastroUsuarioBean.inicializar}"
+			type="preRenderView" />
+		<o:viewParam name="usuario" value="#{cadastroUsuarioBean.usuario}" />
+	</f:metadata>
+
+	<ui:define name="titulo">#{cadastroUsuarioBean.editando ? 'Edição de Usuário' : 'Novo Usuário'}</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>#{cadastroUsuarioBean.editando ? 'Edição de Usuário' : 'Novo
+			Usuário'}</h1>
+		<p:messages id="mensagem" closable="true" />
+		<h:form id="frm">
+
+			<p:toolbar style="margin-top: 20px">
+
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/usuarios/CadastroUsuarios" />
+					<p:separator />
+					<p:commandButton value="Salvar"
+						action="#{cadastroUsuarioBean.salvar}" update="@form :mensagem"
+						process="@form" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisar" outcome="/usuarios/PesquisaUsuarios" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:tabView style="margin-top: 20px">
+
+				<p:tab title="Dados Principais">
+
+					<p:panelGrid columnClasses="rotulo" columns="2"
+						style="width: 100%">
+
+						<p:outputLabel value="Nome Completo" for="nome" />
+						<p:inputText id="nome" size="80" label="Nome"
+							value="#{cadastroUsuarioBean.usuario.nome}" />
+
+						<p:outputLabel value="Nome de Usuário" />
+						<p:inputText size="30"
+							value="#{cadastroUsuarioBean.usuario.nomeUsuario}"
+							label="Nome de usuário" />
+
+						<p:outputLabel value="E-mail" for="email" />
+						<p:inputText id="email" size="50" label="E-mail"
+							value="#{cadastroUsuarioBean.usuario.email}" />
+
+						<p:outputLabel value="Senha" for="senha" />
+						<p:password id="senha" size="20" feedback="true" match="confirme"
+							weakLabel="fraca" goodLabel="boa" strongLabel="forte"
+							promptLabel="Por favor, insira uma senha."
+							value="#{cadastroUsuarioBean.usuario.senha}" label="Senha"
+							validatorMessage="As senhas não são compatíveis." />
+
+						<p:outputLabel value="Confirme" for="confirme" />
+						<p:password id="confirme" size="20" label="Confirmação" />
+
+					</p:panelGrid>
+
+				</p:tab>
+				
+				<p:tab title="Dados Extras"
+					rendered="#{cadastroUsuarioBean.editando}">
+				
+					<p:panelGrid  columnClasses="rotulo" columns="2"
+						style="width: 100%">
+					
+						<p:outputLabel value="Cadastrado por:"/>
+						<h:outputText value="#{cadastroUsuarioBean.usuario.usuario.nome}"/>
+						
+						<p:outputLabel value="Data da Operação:" />
+						<h:outputText value="#{cadastroUsuarioBean.usuario.dataCriacao}">
+							<f:convertDateTime pattern="dd/MM/yyyy - HH:mm" locale="pt_BR"/>
+						</h:outputText>
+						
+					
+					</p:panelGrid>
+				
+				</p:tab>
+
+			</p:tabView>
+
+			<p:spacer height="10" />
+			<p:separator />
+
+			<p:panelGrid style="margin-top: 20px; width: 100%" columns="2"
+				columnClasses="rotulo" id="painelGrupos">
+				<p:selectOneMenu id="grupo" value="#{cadastroUsuarioBean.novoGrupo}">
+					<f:selectItem itemLabel="Selecione um grupo" />
+					<f:selectItems value="#{cadastroUsuarioBean.gruposCadastrados}"
+						var="grupos" itemLabel="#{grupos.descricao}" itemValue="#{grupos}" />
+				</p:selectOneMenu>
+				<p:commandButton value="Adicionar Grupo"
+					update=":frm:tabelaGrupos :mensagem"
+					action="#{cadastroUsuarioBean.adicionarGrupo}"
+					process="painelGrupos" />
+
+			</p:panelGrid>
+
+			<p:dataTable style="margin-top: 20px; width: 100%" paginator="true"
+				emptyMessage="Nenhum grupo adicionado."
+				paginatorAlwaysVisible="false" rows="5"
+				value="#{cadastroUsuarioBean.gruposAdicionados}" var="grupo"
+				id="tabelaGrupos">
+
+				<p:column headerText="Grupos" style="width: 90%">
+					<h:outputText value="#{grupo.descricao}" />
+				</p:column>
+
+				<p:column style="width: 80px; text-align: center">
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="dialogExcluir.show()" process="@this">
+						<f:setPropertyActionListener
+							target="#{cadastroUsuarioBean.grupoSelecionado}" value="#{grupo}" />
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+			<p:confirmDialog widgetVar="dialogExcluir" id="dialogExcluir"
+				header="Confirmação de Remoção"
+				message="Deseja realmente remover este grupo de usuário?">
+
+				<p:commandButton value="Sim"
+					action="#{cadastroUsuarioBean.removerGrupo}"
+					update="tabelaGrupos :msg" process="@this"
+					oncomplete="dialogExcluir.hide()" />
+				<p:commandButton value="Não"
+					oncomplete="dialogExcluir.hide(); return false;" />
+
+			</p:confirmDialog>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

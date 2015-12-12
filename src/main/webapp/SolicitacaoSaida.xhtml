@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	<f:metadata>
+		<f:event listener="#{solicitacaoSaidaBean.inicializar}"
+			type="preRenderView" />
+		<o:viewParam name="solicitacao"
+			value="#{solicitacaoSaidaBean.solicitacao}" />
+		<o:viewParam name="visualizacao"
+			value="#{solicitacaoSaidaBean.visualizacao}" />
+	</f:metadata>
+
+	<ui:define name="titulo">Solicitação de Saída</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Solicitação de Saída</h1>
+		<h:form>
+			<p:messages autoUpdate="true" closable="true" />
+			<p:toolbar style="margin-top: 20px">
+
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/SolicitacaoSaida" />
+					<p:separator />
+					<p:commandButton value="#{solicitacaoSaidaBean.editando ? 'Atualizar' : 'Solicitar'}"
+						action="#{solicitacaoSaidaBean.salvar}" update="@form"
+						process="@form"
+						disabled="#{solicitacaoSaidaBean.visualizacao eq 'visualizacao'}" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisar" outcome="/PesquisaSolicitacaoSaida" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:tabView style="margin-top: 20px; width: 100%">
+
+				<p:tab title="Dados Principais">
+
+					<p:panelGrid columnClasses="rotulo,campo" columns="2"
+						style="width: 100%">
+
+						<p:outputLabel value="Colaborador" />
+						<p:selectOneMenu
+							value="#{solicitacaoSaidaBean.solicitacao.colaborador}"
+							label="Colaborador" filter="true" required="true"
+							requiredMessage="Colaborador deve ser informado."
+							converter="colaboradorConverter"
+							disabled="#{solicitacaoSaidaBean.visualizacao eq 'visualizacao'}">
+							<f:selectItem itemLabel="Selecione um Colaborador" />
+							<f:selectItems value="#{solicitacaoSaidaBean.colaboradores}"
+								var="col" itemValue="#{col}" itemLabel="#{col.nome}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Data da saída" />
+						<p:calendar size="7" locale="pt"
+							value="#{solicitacaoSaidaBean.solicitacao.dataSolicitada}"
+							label="Data" required="true"
+							requiredMessage="Data de Saída deve ser informada" 
+							disabled="#{solicitacaoSaidaBean.visualizacao eq 'visualizacao'}"/>
+
+						<p:outputLabel value="Tempo Solicitado" />
+						<p:calendar pattern="HH:mm" locale="pt" timeOnly="true" size="5"
+							value="#{solicitacaoSaidaBean.solicitacao.tempoSolicitado}"
+							label="Tempo Solicitado" 
+							disabled="#{solicitacaoSaidaBean.visualizacao eq 'visualizacao'}"/>
+
+						<p:outputLabel value="Motivo" />
+						<p:inputTextarea style="height: 90px; width: 50%"
+							value="#{solicitacaoSaidaBean.solicitacao.motivo}" label="Motivo"
+							disabled="#{solicitacaoSaidaBean.visualizacao eq 'visualizacao'}" />
+
+					</p:panelGrid>
+
+				</p:tab>
+
+				<p:tab title="Resposta" rendered="#{solicitacaoSaidaBean.editando and seguranca.responderSolicitacaoPermitido}">
+				
+				<p:panelGrid columnClasses="rotulo,campo" columns="2"
+						style="width: 100%">
+				
+					<p:outputLabel value="Situação"/>
+					<p:selectOneMenu value="#{solicitacaoSaidaBean.solicitacao.situacao}"
+						disabled="#{solicitacaoSaidaBean.visualizacao eq 'visualizacao'}">
+						<f:selectItem itemLabel="Não verificada"/>
+						<f:selectItem itemLabel="Aprovado" itemValue="APROVADO"/>
+						<f:selectItem itemLabel="Reprovado" itemValue="REPROVADO"/>
+					</p:selectOneMenu>
+					
+					<p:outputLabel value="Comentários"/>
+					<p:inputTextarea style="height: 90px; width: 100%"
+						value="#{solicitacaoSaidaBean.solicitacao.comentario}"
+						disabled="#{solicitacaoSaidaBean.visualizacao eq 'visualizacao'}" />
+				
+				</p:panelGrid>
+					
+				
+				</p:tab>
+
+				<p:tab title="Dados Extras" rendered="#{solicitacaoSaidaBean.editando}">
+				
+				<p:panelGrid columnClasses="rotulo,campo" columns="2"
+						style="width: 100%">
+					
+					<p:outputLabel value="Data original da Solicitação: "/>
+					<h:outputText value="#{solicitacaoSaidaBean.solicitacao.dataPrimeiraCriacao}" >
+						<f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>
+					
+					<p:outputLabel value="Data de Atualização: "/>
+					<h:outputText value="#{solicitacaoSaidaBean.solicitacao.dataCriacao}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+					
+				</p:panelGrid>
+
+				</p:tab>
+
+			</p:tabView>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

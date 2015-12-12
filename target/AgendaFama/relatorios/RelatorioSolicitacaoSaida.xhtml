@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+	
+	<f:metadata>
+		<f:event listener="#{relatorioSolicitacaoBean.inicializar}" type="preRenderView" />
+	</f:metadata>
+
+
+	<ui:define name="titulo">Relatório de Solicitação de Saída</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Relatório de Solicitação de Saída</h1>
+
+		<h:form target="_blank">
+			<p:toolbar style="margin-top: 20px">
+
+				<p:toolbarGroup>
+					<p:commandButton value="Emitir"
+						action="#{relatorioSolicitacaoBean.emitir}" ajax="false" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:panelGrid style="margin-top: 20px; width:100%" columns="2"
+				columnClasses="rotulo">
+
+				<p:outputLabel value="Data da solicitação" />
+				<p:calendar size="10" locale="pt"
+					value="#{relatorioSolicitacaoBean.filtro.dataSolicitacao}" />
+					
+				<p:outputLabel value="Colaborador"/>
+				<p:selectOneMenu value="#{relatorioSolicitacaoBean.filtro.colaborador}" >
+					<f:selectItem itemLabel="Selecione um colaborador"/>
+					<f:selectItems value="#{relatorioSolicitacaoBean.todosUsuarios}"
+						var="colaborador" itemValue="#{colaborador}" 
+						itemLabel="#{colaborador.nome}"/>
+				</p:selectOneMenu>
+
+
+			</p:panelGrid>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

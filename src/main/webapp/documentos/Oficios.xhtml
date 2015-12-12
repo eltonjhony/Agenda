@@ -1,0 +1,70 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+	
+	<f:metadata>
+		<o:viewParam name="oficio" value="#{emissaoOficioBean.oficio}" />
+	</f:metadata>
+	
+
+	
+	<ui:define name="titulo">Emissão de Ofícios ASSOCIAÇÃO CULTURAL FAZENDAS FAMA</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Emissão de Ofícios ASSOCIAÇÃO CULTURAL FAZENDAS FAMA</h1>
+		<h:form>
+			<p:messages autoUpdate="true" closable="true" />
+			<p:toolbar style="margin-top: 20px">
+
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/documentos/Oficios.xhtml" />
+					<p:separator />
+					<p:commandButton value="Emitir"
+						action="#{emissaoOficioBean.salvar}" update="@form"
+						process="@form" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Buscar Catálogo" icon="ui-icon-search"
+						outcome="/documentos/ImpressaoOficios.xhtml" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:tabView style="margin-top: 20px; width: 100%">
+
+				<p:tab title="Dados Principais">
+
+					<p:panelGrid columnClasses="rotulo,campo" columns="2"
+						style="width: 100%">
+
+						<p:outputLabel value="Assunto" />
+						<p:inputText value="#{emissaoOficioBean.oficio.assunto}" size="50"
+							maxlength="50" label="Assunto"/>
+
+						<p:outputLabel value="Descrição" />
+						<p:inputTextarea value="#{emissaoOficioBean.oficio.descricao}"
+							style="width: 70%;heigth: 300px" autoResize="false"
+							maxlength="400" label="Descrição"/>
+
+					</p:panelGrid>
+
+				</p:tab>
+				
+				<p:tab title="Visualizar Padrão">
+					
+					<h:outputText value="#{emissaoOficioBean.padrao}" style="margin-top: 20px"/>
+					
+				</p:tab>
+
+			</p:tabView>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

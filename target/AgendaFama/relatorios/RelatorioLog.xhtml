@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="/WEB-INF/template/LayoutPadrao.xhtml">
+	  
+
+	  <ui:define name="titulo">Relatório de Log de exclusão</ui:define>
+	  
+	  <ui:define name="corpo">
+	  
+	  	<h1>Relatório de Log de exclusão</h1>
+	  	
+	  	<h:form target="_blank">
+		  	<p:toolbar style="margin-top: 20px">
+	  		
+	  			<p:toolbarGroup>
+	  				<p:commandButton value="Emitir" action="#{relatorioLogBean.emitir}" ajax="false"/>
+	  			</p:toolbarGroup>
+	  		
+	  		</p:toolbar>
+	  		
+	  		<p:panelGrid style="margin-top: 20px; width:100%" columns="2"
+	  			columnClasses="rotulo">
+	  			
+	  			<p:outputLabel value="Data de Exclusão"/>
+	  			<h:panelGroup>
+	  				<p:calendar size="10" locale="pt"
+	  					value="#{relatorioLogBean.filtro.dataDe}" />
+	  				a
+	  				<p:calendar size="10" locale="pt" 
+	  					value="#{relatorioLogBean.filtro.dataAte}"/>
+	  			</h:panelGroup>
+	  		
+	  		</p:panelGrid>
+	  		
+	  	</h:form>
+	  	  
+	  </ui:define>
+
+</ui:composition>

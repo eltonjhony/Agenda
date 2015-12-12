@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="/WEB-INF/template/LayoutPadrao.xhtml">
+	  
+	  <f:metadata>
+	  	<f:event listener="#{relatorioCompromissoBean.inicializar}" type="preRenderView"/>
+	  </f:metadata>
+
+	  <ui:define name="titulo">Relatório de Compromissos</ui:define>
+	  
+	  <ui:define name="corpo">
+	  
+	  	<h1>Relatório de Compromissos</h1>
+	  	
+	  	<h:form target="_blank">
+		  	<p:toolbar style="margin-top: 20px">
+	  		
+	  			<p:toolbarGroup>
+	  				<p:commandButton value="Emitir" ajax="false" action="#{relatorioCompromissoBean.emitir}"/>
+	  			</p:toolbarGroup>
+	  		
+	  		</p:toolbar>
+	  		
+	  		<p:panelGrid style="margin-top: 20px; width:100%" columns="2"
+	  			columnClasses="rotulo">
+	  			
+	  			<p:outputLabel value="Visibilidade"/>
+				<p:selectOneMenu value="#{relatorioCompromissoBean.filtro.visibilidade}">
+					<f:selectItem itemLabel="Selecione o tipo do compromisso"/>
+					<f:selectItems value="#{relatorioCompromissoBean.visibilidades}"
+						var="visi" itemValue="#{visi.descricao}" itemLabel="#{visi.descricao}"/>
+				</p:selectOneMenu>
+	  		
+	  			<p:outputLabel value="Data do compromisso"/>
+	  			<h:panelGroup>
+	  				<p:calendar size="7" locale="pt"
+	  					value="#{relatorioCompromissoBean.filtro.dataDe}"/>
+	  				a
+	  				<p:calendar size="7" locale="pt"
+	  					value="#{relatorioCompromissoBean.filtro.dataAte}"/>
+	  			</h:panelGroup>
+	  			
+	  			<p:outputLabel value="Departamento"/>
+	  			<p:selectOneMenu value="#{relatorioCompromissoBean.filtro.departamentoPai}">
+	  				<f:selectItem itemLabel="Selecione um Departamento"/>
+	  				<f:selectItems value="#{relatorioCompromissoBean.departamentos}" var="deps"
+	  					itemValue="#{deps}" itemLabel="#{deps.descricao}"/>
+	  				<p:ajax
+						listener="#{relatorioCompromissoBean.carregarSubDepartamentos}"
+						update="subDepartamento" />
+	  			</p:selectOneMenu>
+	  			
+	  			<p:outputLabel value="Subdepartamento" for="subDepartamento" />
+				<p:selectOneMenu id="subDepartamento"
+					value="#{relatorioCompromissoBean.filtro.subdepartamento}">
+					<f:selectItem itemLabel="Selecione o subdepartamento" />
+					<f:selectItems value="#{relatorioCompromissoBean.subDepartamentos}"
+						var="subdep" itemValue="#{subdep}" itemLabel="#{subdep.descricao}" />
+				</p:selectOneMenu>
+	  			
+	  		
+	  		</p:panelGrid>
+	  		
+	  	</h:form>
+	  	  
+	  </ui:define>
+
+</ui:composition>

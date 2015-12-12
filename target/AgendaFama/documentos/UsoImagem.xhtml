@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+
+	<ui:define name="titulo">Emissão de Documento de Uso de Imagem</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Emissão de Documento de Uso de Imagem</h1>
+		<h:form target="_blank">
+			<p:messages autoUpdate="true" closable="true" />
+			<p:toolbar style="margin-top: 20px">
+
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/documentos/UsoImagem.xhtml" />
+					<p:separator />
+					<p:commandButton value="Emitir"
+						action="#{documentoUsoImagemBean.salvar}" update="@form"
+						process="@form" />
+					<p:separator />
+					<p:separator />
+					<p:commandButton value="Imprimir"
+						action="#{documentoUsoImagemBean.emitir}" update="@this"
+						process="@this" ajax="false"
+						rendered="#{documentoUsoImagemBean.editando}" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+	
+			
+			<p:tabView style="margin-top: 20px; width: 100%" >
+
+				<p:tab title="Dados Principais">
+					
+					<p:panelGrid columnClasses="rotulo,campo" columns="2"
+						style="width: 100%" >
+
+						<p:outputLabel value="Nome" />
+						<p:inputText value="#{documentoUsoImagemBean.usoImagem.nome}"
+							size="50"  />
+
+						<p:outputLabel value="Endereço" />
+						<p:inputText value="#{documentoUsoImagemBean.usoImagem.endereco}"
+							size="50" />
+
+						<p:outputLabel value="CPF" />
+						<p:inputMask value="#{documentoUsoImagemBean.usoImagem.cpf}"
+							mask="999.999.999-99" size="10" />
+
+						<p:outputLabel value="RG" />
+						<p:inputText value="#{documentoUsoImagemBean.usoImagem.rg}"
+							size="10" />
+
+						<p:outputLabel value="Fone" />
+						<p:inputMask value="#{documentoUsoImagemBean.usoImagem.fone}"
+							mask="(99)99999-9999" size="10" />
+
+
+					</p:panelGrid>
+					
+
+				</p:tab>
+
+			</p:tabView>
+			</h:form>
+
+
+
+	</ui:define>
+
+</ui:composition>

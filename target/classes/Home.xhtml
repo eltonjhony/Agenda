@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="dummy" />
+		<f:event listener="#{graficoAtividadesBean.preRender}"
+			type="preRenderView" />
+		<f:event listener="#{graficoCompromissosBean.preRender}"
+			type="preRenderView" />
+		<f:event listener="#{informacoesBean.inicializar}"
+			type="preRenderView" />
+		
+		<f:event listener="#{lembretesBean.inicializar}" type="preRenderView" />
+		
+	</f:metadata>
+
+	<ui:define name="titulo">Página Inicial</ui:define>
+
+	<ui:define name="corpo">
+
+		<p:panelGrid styleClass="semBorda2" columns="6"
+			style="margin-left: 90px">
+			<p:outputLabel value="Data Corrente: " />
+			<h:outputText value="#{informacoesBean.dataCorrente}">
+				<f:convertDateTime pattern="dd/MM/yyyy - HH:mm" locale="pt_BR"
+					timeZone="America/Sao_Paulo" />
+			</h:outputText>
+		</p:panelGrid>
+
+		<p:lineChart value="#{graficoAtividadesBean.model}"
+			style="height: 250px" title="Atividades Agendadas" animate="true"
+			legendPosition="e" minY="0" maxY="4"
+			yaxisLabel="Quantidade de atividades" />
+
+		<p:separator />
+		<br />
+
+		<p:lineChart value="#{graficoCompromissosBean.model}"
+			style="height: 250px" title="Compromissos Agendados" animate="true"
+			legendPosition="e" minY="0" maxY="4"
+			yaxisLabel="Quantidade de compromissos"
+			seriesColors="66cc66, 93b75f, E7E658, cc6666" />
+		<br />
+		
+	</ui:define>
+
+</ui:composition>

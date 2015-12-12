@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panelGrid columns="2" columnClasses="rotulo" style="width: 100%">
+
+		<p:outputLabel value="Kilometragem Total" />
+		<h:panelGroup>
+			<p:inputText size="15"
+				value="#{cadastroAtividadeBean.atividade.quilometragem}" />
+			<h:outputText value=" (km)" />
+		</h:panelGroup>
+
+	</p:panelGrid>
+
+	<p:commandButton value="Adicionar Colaborador" style="margin-top: 10px"
+		oncomplete="dialogColaborador.show();" update="dialogColaborador"
+		process="@this" disabled="#{cadastroAtividadeBean.atividade.visualizando}"/>
+
+	<p:dataTable style="margin-top: 10px; width: 100%" paginator="true"
+		emptyMessage="Nenhum colaborador adicionado."
+		paginatorAlwaysVisible="false" rows="3"
+		value="#{cadastroAtividadeBean.colaboradores}" var="colaborador"
+		id="tabelaColaborador">
+
+		<p:column headerText="Colaboradores">
+			<h:outputText value="#{colaborador.nome}" />
+		</p:column>
+
+		<p:column headerText="" style="text-align: center"
+			width="8%">
+			<p:commandButton
+				action="#{cadastroAtividadeBean.removerColaborador}"
+				process="@this" update="tabelaColaborador :msg"
+				icon="ui-icon-trash" title="Excluir">
+				<f:setPropertyActionListener
+					target="#{cadastroAtividadeBean.novoColaborador}" value="#{colaborador}" />
+			</p:commandButton>
+		</p:column>
+
+	</p:dataTable>
+
+	<p:dialog widgetVar="dialogColaborador" resizable="false"
+		draggable="false" appendToBody="@(body)" modal="true"
+		header="Adicione um Colaborador" id="dialogColaborador">
+
+		<p:panelGrid columnClasses="rotulo" columns="2" styleClass="semBorda"
+			id="painelColaborador">
+
+			<p:outputLabel value="Colaborador" />
+			<p:selectOneMenu value="#{cadastroAtividadeBean.novoColaborador}">
+				<f:selectItem itemLabel="Selecione um Colaborador" />
+				<f:selectItems value="#{cadastroAtividadeBean.listaUsuarios}"
+					var="user" itemValue="#{user}" itemLabel="#{user.nome}" />
+			</p:selectOneMenu>
+
+			<p:commandButton value="Adicionar"
+				action="#{cadastroAtividadeBean.adicionarColaborador}"
+				process="painelColaborador" update="tabelaColaborador"
+				oncomplete="dialogColaborador.hide();" />
+
+		</p:panelGrid>
+
+	</p:dialog>
+
+
+</ui:composition>

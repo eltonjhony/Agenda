@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="/WEB-INF/template/LayoutPadrao.xhtml">
+	  
+	  <f:metadata>
+	  	<f:event listener="#{pesquisaAtividadeBean.inicializar}" type="preRenderView"/>
+	  </f:metadata>
+
+	  <ui:define name="titulo">Pesquisa de Atividades</ui:define>
+	  
+	  <ui:define name="corpo">
+	  	
+	  	<h1>Pesquisa de Atividades</h1>
+	  	<p:messages autoUpdate="true" closable="true"/>
+	  	<h:form id="frm">
+	  	
+	  		<p:toolbar style="margin-top: 20px">
+	  		
+	  			<p:toolbarGroup>
+	  				<p:commandButton value="Pesquisar" action="#{pesquisaAtividadeBean.pesquisar}"
+	  					update="@form" process="@form"/>
+	  			</p:toolbarGroup>
+	  			
+	  			<p:toolbarGroup align="right">
+	  				<p:button value="Novo" outcome="/atividades/CadastroAtividade"/>
+	  			</p:toolbarGroup>
+	  		
+	  		</p:toolbar>
+	  		
+	  		<p:panelGrid style="margin-top: 20px; width: 100%" columnClasses="rotulo"
+	  			columns="2">
+	  			
+	  			<p:outputLabel value="Data da atividade" />
+	  			<h:panelGroup layout="block">
+	  				<p:calendar size="7" locale="pt"
+	  					value="#{pesquisaAtividadeBean.filtro.dataDe}"/>
+	  				a
+	  				<p:calendar size="7" locale="pt"
+	  					value="#{pesquisaAtividadeBean.filtro.dataAte}"/>
+	  			</h:panelGroup>
+	  			
+	  			<p:outputLabel value="Tipo da atividade"/>
+	  			<p:selectOneMenu value="#{pesquisaAtividadeBean.filtro.tipos}" >
+	  				<f:selectItem itemLabel="Selecione o tipo da Atividade"/>
+		  			<f:selectItems value="#{pesquisaAtividadeBean.tipoAtividades}" var="tipo"
+		  				itemValue="#{tipo}" itemLabel="#{tipo.descricao}"/>
+	  			</p:selectOneMenu>
+	  			
+	  			<p:outputLabel value="Nome da atividade"/>
+	  			<p:inputText size="40" value="#{pesquisaAtividadeBean.filtro.nome}"/>
+	  			
+	  		
+	  		</p:panelGrid>
+	  		
+	  		<p:dataTable style="margin-top: 20px; width: 100%" paginator="true" paginatorAlwaysVisible="false"
+	  			emptyMessage="Nenhum registro encontrado." rows="9"
+	  			value="#{pesquisaAtividadeBean.listaAtividades}" var="atividade"
+	  			id="tabelaAtividade">
+	  			
+	  			<f:facet name="header">
+	  				<h:outputText value="Listagem de Atividades"/>
+	  			</f:facet>
+	  			
+	  			<p:column headerText="Código" style="text-align: center">
+	  				<h:outputText value="#{atividade.id}"/>
+	  			</p:column>
+	  			
+	  			<p:column headerText="Data da atividade" style="text-align: center">
+	  				<h:outputText value="#{atividade.dataAtividade}" > 
+	  					<f:convertDateTime pattern="dd/MM/yyyy" locale="pt_BR"/>
+	  				</h:outputText>
+	  			</p:column>
+	  			
+	  			<p:column headerText="Nome da Atividade" width="50%">
+	  				<h:outputText value="#{atividade.nomeAtividade}"/>
+	  			</p:column>
+	  			
+	  			<p:column headerText="Tipo" style="text-align: center" >
+	  				<h:outputText value="#{atividade.tipoAtividade.descricao}"/>
+	  			</p:column>
+	  			
+	  			<p:column width="10%" style="text-align: center">
+	  				
+	  				<p:button icon=" ui-icon-search" outcome="/atividades/CadastroAtividade"
+						title="Visualizar" >
+						<f:param value="#{atividade.id}" name="atividade"/>
+						<f:param value="visualizacao" name="visualizacao"/>
+					</p:button>
+	  				
+	  				<p:button icon="ui-icon-pencil" outcome="/atividades/CadastroAtividade" 
+	  					title="Editar">
+	  					<f:param name="atividade" value="#{atividade.id}"/>
+	  				</p:button>
+	  				
+	  				<p:commandButton icon="ui-icon-trash" oncomplete="dialogExcluir.show();"
+	  					update=":frm:dialogExcluir" process="@this" title="Excluir" >
+	  					<f:setPropertyActionListener target="#{pesquisaAtividadeBean.atividadeSelecionada}" value="#{atividade}"/>
+	  				</p:commandButton>
+	  			</p:column>
+
+	  		</p:dataTable>
+	  		
+	  		<p:confirmDialog widgetVar="dialogExcluir" id="dialogExcluir"
+	  			header="Confirmação de Exclusão"
+	  			message="Deseja realmente excluir a atividade #{pesquisaAtividadeBean.atividadeSelecionada.nomeAtividade}?">
+	  			
+	  			<p:commandButton value="Sim" action="#{pesquisaAtividadeBean.excluir}" update=":frm:tabelaAtividade"
+	  				process="@this" oncomplete="dialogExcluir.hide();"/>
+	  			
+	  			<p:commandButton value="Não" oncomplete="dialogExcluir.hide(); return false;"/>
+	  		
+	  		</p:confirmDialog>
+	  	
+	  	</h:form>
+	  	  
+	  </ui:define>
+
+</ui:composition>

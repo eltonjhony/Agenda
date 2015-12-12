@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:tabView style="margin-top: 20px">
+
+		<p:tab title="Dados Principais">
+			<p:panelGrid style="width: 100%"
+				columnClasses="rotulo,campo" columns="4">
+				
+				<p:outputLabel value="Data da atividade" />
+				<p:calendar locale="pt" size="8" value="#{cadastroAtividadeBean.atividade.dataAtividade}"
+					label="Data da Atividade" />
+
+				<p:outputLabel value="Tipo da atividade" />
+				<p:selectOneRadio value="#{cadastroAtividadeBean.atividade.tipoAtividade}"
+					label="Tipo da Atividade">
+					<f:selectItems value="#{cadastroAtividadeBean.atividades}"
+						var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
+				</p:selectOneRadio>
+				
+				<p:outputLabel value="Faixa etária" />
+				<p:selectManyCheckbox value="#{cadastroAtividadeBean.faixasEscolhidas}"
+					converter="faixaConverter">
+					<f:selectItems value="#{cadastroAtividadeBean.faixas}" var="f"
+						itemValue="#{f}" itemLabel="#{f.descricao}" >
+						</f:selectItems>
+				</p:selectManyCheckbox>
+				
+				<h:panelGroup>
+					<p:outputLabel value="Horário Matutino" />
+					<p:calendar pattern="HH:mm" locale="pt" timeOnly="true" size="5" 
+						value="#{cadastroAtividadeBean.atividade.horarioDiurno}"
+						style="margin-left: 5px"/>
+				</h:panelGroup>
+				
+				<h:panelGroup>
+					<p:outputLabel value="Horário Vespertino" />	
+					<p:calendar pattern="HH:mm" locale="pt" timeOnly="true" size="5"
+						value="#{cadastroAtividadeBean.atividade.horarioVespertino}"
+						style="margin-left: 5px" />
+				</h:panelGroup>
+				
+		
+				<p:outputLabel value="Nome da Atividade" />
+				<p:inputText size="100" value="#{cadastroAtividadeBean.atividade.nomeAtividade}"
+					label="Nome da Atividade" />
+
+				<h:panelGroup>
+					<p:outputLabel value="Horário Noturno" />	
+					<p:calendar pattern="HH:mm" locale="pt" timeOnly="true" size="5"
+						value="#{cadastroAtividadeBean.atividade.horarioNoturno}"
+						style="margin-left: 9px" />
+				</h:panelGroup>
+				<p:spacer />
+
+				<p:outputLabel value="Descrição" />
+				<p:inputText size="100" value="#{cadastroAtividadeBean.atividade.descricao}" />
+
+				<p:spacer />
+				<p:spacer />
+
+				<p:outputLabel value="Participantes" />
+				<p:inputText size="100" value="#{cadastroAtividadeBean.atividade.participantes}" />
+
+			</p:panelGrid>
+		</p:tab>
+
+		<p:tab title="Dados Extras"
+			rendered="#{cadastroAtividadeBean.editando}">
+			
+			<p:panelGrid style="width: 100%"
+				columnClasses="rotulo,campo" columns="2">
+				
+				<p:outputLabel value="Cadastrado por:"/>
+				<h:outputText value="#{cadastroAtividadeBean.atividade.usuario.nome}" />
+				
+				<p:outputLabel value="Data da Operação:"/>
+				<h:outputText value="#{cadastroAtividadeBean.atividade.dataCriacao}">
+					<f:convertDateTime pattern="dd/MM/yyyy - HH:mm" locale="pt_BR"/>
+				</h:outputText>
+			
+			</p:panelGrid>
+			
+		</p:tab>
+
+	</p:tabView>
+
+</ui:composition>

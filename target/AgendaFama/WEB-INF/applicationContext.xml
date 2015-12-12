@@ -1,0 +1,108 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<beans:bean id="appUserDetailsService"
+		class="com.fama.agenda.security.AppUserDetailsService" />
+
+	<beans:bean id="exceptionTranslationFilter"
+		class="org.springframework.security.web.access.ExceptionTranslationFilter">
+		<beans:property name="accessDeniedHandler" ref="jsfAccessDeniedHandler" />
+		<beans:property name="authenticationEntryPoint" ref="authenticationEntryPoint" />
+	</beans:bean>
+	<beans:bean id="jsfAccessDeniedHandler"
+		class="com.fama.agenda.security.JsfAccessDeniedHandler">
+		<beans:property name="loginPath" value="/AcessoNegado.xhtml" />
+		<beans:property name="contextRelative" value="true" />
+	</beans:bean>
+	<beans:bean id="authenticationEntryPoint"
+		class="com.fama.agenda.security.JsfLoginUrlAuthenticationEntryPoint">
+		<beans:property name="loginFormUrl" value="/Login.xhtml" />
+		<beans:property name="redirectStrategy" ref="jsfRedirectStrategy" />
+	</beans:bean>
+	<beans:bean id="jsfRedirectStrategy"
+		class="com.fama.agenda.security.JsfRedirectStrategy" />
+
+	<http pattern="/javax.faces.resource/**" security="none" />
+	<http pattern="/Login.xhtml" security="none" />
+	<http pattern="/Erro.xhtml" security="none" />
+
+	<http auto-config="false" use-expressions="true">
+		<custom-filter ref="exceptionTranslationFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+		<intercept-url pattern="/Home.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/AcessoNegado.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/relatorios/RelatorioContatos.xhtml"
+			access="isAuthenticated()" />
+		<intercept-url pattern="/contatos/**" access="isAuthenticated()" />
+		<intercept-url pattern="/relatorios/RelatorioSolicitacaoSaida.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/SolicitacaoSaida.xhtml" 
+			access="isAuthenticated()" />
+		<intercept-url pattern="/recados/CadastroRecados.xhtml" 
+			access="isAuthenticated()" />
+		<intercept-url pattern="/documentos/Oficios.xhtml" 
+			access="isAuthenticated()" />
+		<intercept-url pattern="/documentos/AgradecimentosDoacao.xhtml" 
+			access="isAuthenticated()" />
+		<intercept-url pattern="/documentos/ImpressaoAgradecimentos.xhtml" 
+			access="isAuthenticated()" />
+		<intercept-url pattern="/documentos/ImpressaoTermoAdesao.xhtml" 
+			access="isAuthenticated()" />
+		<intercept-url pattern="/documentos/EmissaoTermoAdesao.xhtml" 
+			access="isAuthenticated()" />
+		
+		<intercept-url pattern="/documentos/ImpressaoOficios.xhtml" 
+			access="isAuthenticated()" />
+		
+		<intercept-url pattern="/documentos/UsoImagem.xhtml" 
+			access="isAuthenticated()" />
+		
+		<intercept-url pattern="/PesquisaSolicitacaoSaida.xhtml" 
+			access="isAuthenticated()" />
+
+		<intercept-url pattern="/atividades/**"
+			access="hasAnyRole('SUPER USUARIO','ADMINISTRACAO', 'ASSOCIACAO')" />
+			
+		<intercept-url pattern="/compromissos/**"
+			access="hasAnyRole('SUPER USUARIO','ADMINISTRACAO','UNIDADE DE ARMAZENAMENTO','ALMOXARIFADO','AGRICOLA','SPACO MOTOS')" />
+		
+
+		<intercept-url pattern="/usuarios/**" access="hasAnyRole('SUPER USUARIO')" />
+
+		<intercept-url pattern="/relatorios/RelatorioAtividadeInterna.xhtml"
+			access="hasAnyRole('SUPER USUARIO','ADMINISTRACAO', 'ASSOCIACAO')" />
+		
+		<intercept-url pattern="/relatorios/RelatorioAtividadeExterna.xhtml"
+			access="hasAnyRole('SUPER USUARIO','ADMINISTRACAO', 'ASSOCIACAO')" />
+			
+		<intercept-url pattern="/relatorios/RelatorioCompromisso.xhtml"
+			access="hasAnyRole('SUPER USUARIO','ADMINISTRACAO','UNIDADE DE ARMAZENAMENTO','ALMOXARIFADO','AGRICOLA','SPACO MOTOS')" />
+			
+		<intercept-url pattern="/relatorios/RelatorioLog.xhtml" 
+			access="hasAnyRole('SUPER USUARIO')"/>
+		
+		<intercept-url pattern="/relatorios/RelatorioSolicitacaoSaida.xhtml" 
+			access="hasAnyRole('SUPER USUARIO','ADMINISTRACAO')" />
+			
+		
+
+
+
+		<intercept-url pattern="/**" access="denyAll" />
+
+		<form-login login-page="/Login.xhtml" default-target-url="/"
+			always-use-default-target="true" authentication-failure-url="/Login.xhtml?invalid=true" />
+		<logout logout-url="/j_spring_security_logout"
+			invalidate-session="true" />
+
+	</http>
+
+	<authentication-manager>
+		<authentication-provider user-service-ref="appUserDetailsService">
+			<!-- <password-encoder hash="md5"/> -->
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>

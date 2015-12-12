@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	  <ui:define name="titulo">Pesquisa de Contatos</ui:define>
+	  
+	  <ui:define name="corpo">
+	  	
+	  	<h1>Pesquisa de Contatos</h1>
+	  	<p:messages autoUpdate="true" closable="true"/>
+	  	<h:form id="frm">
+	  	
+	  		<p:toolbar style="margin-top: 20px">
+	  		
+	  			<p:toolbarGroup>
+	  				<p:commandButton value="Pesquisar" action="#{pesquisaContatoBean.pesquisar}"
+	  					update="@form" process="@form"/>
+	  			</p:toolbarGroup>
+	  			
+	  			<p:toolbarGroup align="right">
+	  				<p:button value="Novo" outcome="/contatos/CadastroContatos"/>
+	  			</p:toolbarGroup>
+	  			
+	  		</p:toolbar>
+	  		
+	  		<p:panelGrid style="margin-top: 20px; width: 100%" columnClasses="rotulo"
+	  			columns="2">
+	  			
+	  			<p:outputLabel value="Tipo"/>
+	  			<p:selectManyCheckbox value="#{pesquisaContatoBean.filtro.tipoPessoa}">
+	  				<f:selectItems value="#{pesquisaContatoBean.tipoPessoas}" var="tipo"
+	  					itemLabel="#{tipo.descricao}" itemValue="#{tipo}"/>
+	  			</p:selectManyCheckbox>
+	  			
+	  			<p:outputLabel value="Nome" for="nome"/>
+	  			<p:inputText id="nome" size="40" value="#{pesquisaContatoBean.filtro.nome}"/>
+	  			
+	  			<p:outputLabel value="Apelido" for="apelido"/>
+	  			<p:inputText id="apelido" size="40" value="#{pesquisaContatoBean.filtro.apelido}"/>
+	  			
+	  		</p:panelGrid>
+	  		
+	  		<p:dataTable style="margin-top: 20px; width: 100%" paginator="true" paginatorAlwaysVisible="false"
+	  			emptyMessage="Nenhum registro encontrado." rows="9"
+	  			value="#{pesquisaContatoBean.listaContatos}" var="contato"
+	  			id="tabelaContato">
+	  			
+	  			<f:facet name="header">
+	  				<h:outputText value="Listagem de Contatos"/>
+	  			</f:facet>
+	  			
+	  			<p:column headerText="Código" width="10%" style="text-align: center">
+	  				<h:outputText value="#{contato.id}"/>
+	  			</p:column>
+	  			
+	  			<p:column headerText="Nome" >
+	  				<h:outputText value="#{contato.nome}"/>
+	  			</p:column>
+	  			
+	  			<p:column headerText="Apelido" >
+	  				<h:outputText value="#{contato.apelido}"/>
+	  			</p:column>
+	  			
+	  			<p:column headerText="Tipo" width="10%" style="text-align: center">
+	  				<h:outputText value="#{contato.tipo.descricao}"/>
+	  			</p:column>
+	  			
+	  			
+	  			<p:column width="10%" style="text-align: center">
+	  				<p:button icon="ui-icon-search" title="Visualizar"
+	  					outcome="/contatos/CadastroContatos">
+	  					<f:param value="#{contato.id}" name="contato"/>
+	  					<f:param value="visualizacao" name="visualizacao"/>
+	  				</p:button>
+	  				<p:button icon="ui-icon-pencil" title="Editar"
+	  					outcome="/contatos/CadastroContatos">
+	  					<f:param value="#{contato.id}" name="contato"/>
+	  				</p:button>
+	  				<p:commandButton icon="ui-icon-trash" title="Excluir"
+	  					update=":frm:dialogExcluir" oncomplete="dialogExcluir.show()" >
+	  					<f:setPropertyActionListener target="#{pesquisaContatoBean.contatoSelecionado}" value="#{contato}"/>
+	  				</p:commandButton>
+	  			</p:column>
+	 
+	  		</p:dataTable>
+	  		
+	  		<p:confirmDialog widgetVar="dialogExcluir" id="dialogExcluir"
+	  			header="Confirmação de Exclusão"
+	  			message="Deseja realmente excluir o contato #{pesquisaContatoBean.contatoSelecionado.nome}">
+	  			
+	  			<p:commandButton value="Sim" action="#{pesquisaContatoBean.excluir}" oncomplete="dialogExcluir.hide()"
+	  				update=":frm:tabelaContato"/>
+	  			
+	  			<p:commandButton value="Não" oncomplete="dialogExcluir.hide(); return false;"/>
+	  		
+	  		</p:confirmDialog>
+	  	
+	  	</h:form>
+	  	  
+	  </ui:define>
+
+</ui:composition>

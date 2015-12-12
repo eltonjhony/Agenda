@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:o="http://omnifaces.org/ui"
+	  template="/WEB-INF/template/LayoutPadrao.xhtml">
+	  
+	  <f:metadata>
+	  	<f:event listener="#{cadastroCompromissoBean.inicializar}" type="preRenderView"/>
+	  	<o:viewParam name="compromisso" value="#{cadastroCompromissoBean.compromisso}"/>
+	  	<o:viewParam name="visualizacao" value="#{cadastroCompromissoBean.compromisso.visualizacao}"/>
+	  </f:metadata>
+
+	  <ui:define name="titulo">#{cadastroCompromissoBean.editando ? 'Edição de Compromisso' : 'Novo Compromisso'}</ui:define>
+	  
+	  <ui:define name="corpo">
+	  	
+	  	<h1>#{cadastroCompromissoBean.editando ? 'Edição de Compromisso' : 'Novo Compromisso'}</h1>
+	  	<p:messages id="mensagem" closable="true"/>
+			<h:form>
+			  	<ui:include src="/WEB-INF/template/compromissos/BotoesCompromissos.xhtml"></ui:include>
+			  	
+			  	<ui:include src="/WEB-INF/template/compromissos/CapaCompromissos.xhtml"></ui:include>
+			  	
+			  	<p:spacer height="10"/>
+			  	<p:separator/>
+			  	
+			  	<ui:include src="/WEB-INF/template/compromissos/ContatosCompromissos.xhtml"></ui:include>
+			</h:form>
+	  	
+	  	  
+	  </ui:define>
+
+</ui:composition>

@@ -1,0 +1,152 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	<f:metadata>
+		<f:event listener="#{pesquisaCompromissoBean.inicializar}"
+			type="preRenderView" />
+	</f:metadata>
+
+	<ui:define name="titulo">Pesquisa de Compromissos</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Pesquisa de Compromissos</h1>
+		<p:messages autoUpdate="true" closable="true" />
+		<h:form id="frm">
+
+			<p:toolbar style="margin-top: 20px">
+
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar"
+						action="#{pesquisaCompromissoBean.pesquisar}" update="@form" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" outcome="/compromissos/CadastroCompromisso" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:panelGrid style="margin-top: 20px; width: 100%"
+				columnClasses="rotulo" columns="2">
+
+				<p:outputLabel value="Visibilidade" />
+				<p:selectOneMenu
+					value="#{pesquisaCompromissoBean.filtro.visibilidade}">
+					<f:selectItems value="#{pesquisaCompromissoBean.visibilidades}"
+						var="visi" itemValue="#{visi.descricao}"
+						itemLabel="#{visi.descricao}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Data do compromisso" />
+				<h:panelGroup layout="block">
+					<p:calendar size="8"
+						value="#{pesquisaCompromissoBean.filtro.dataDe}" />
+	  				a
+	  				<p:calendar size="8"
+						value="#{pesquisaCompromissoBean.filtro.dataAte}" />
+				</h:panelGroup>
+
+				<p:outputLabel value="Descrição" />
+				<p:inputText value="#{pesquisaCompromissoBean.filtro.descricao}"
+					size="50" />
+
+				<p:outputLabel value="Departamento" for="departamento" />
+				<p:selectOneMenu id="departamento"
+					value="#{pesquisaCompromissoBean.filtro.departamentoPai}">
+					<f:selectItem itemLabel="Selecione o departamento" />
+					<f:selectItems value="#{pesquisaCompromissoBean.departamentosPai}"
+						var="dep" itemValue="#{dep}" itemLabel="#{dep.descricao}" />
+					<p:ajax
+						listener="#{pesquisaCompromissoBean.carregarSubDepartamentos}"
+						update="subDepartamento" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Subdepartamento" for="subDepartamento" />
+				<p:selectOneMenu id="subDepartamento"
+					value="#{pesquisaCompromissoBean.filtro.subdepartamento}">
+					<f:selectItem itemLabel="Selecione o subdepartamento" />
+					<f:selectItems value="#{pesquisaCompromissoBean.subDepartamentos}"
+						var="subdep" itemValue="#{subdep}" itemLabel="#{subdep.descricao}" />
+				</p:selectOneMenu>
+
+			</p:panelGrid>
+
+			<p:dataTable style="margin-top: 20px; width: 100%" paginator="true"
+				paginatorAlwaysVisible="false"
+				emptyMessage="Nenhum registro encontrado." rows="9"
+				id="tabelaCompromisso"
+				value="#{pesquisaCompromissoBean.listaCompromissos}"
+				var="compromisso">
+
+				<f:facet name="header">
+					<h:outputText value="Listagem de Compromissos" />
+				</f:facet>
+
+				<p:column headerText="Código" style="text-align: center">
+					<h:outputText value="#{compromisso.id}" />
+				</p:column>
+
+				<p:column headerText="Data do compromisso"
+					style="text-align: center">
+					<h:outputText value="#{compromisso.dataCompromisso}">
+						<f:convertDateTime pattern="dd/MM/yyyy" locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Descrição" width="70%">
+					<h:outputText value="#{compromisso.descricao}" />
+				</p:column>
+
+				<p:column headerText="Horário" style="text-align: center">
+					<h:outputText value="#{compromisso.horario}">
+						<f:convertDateTime pattern="HH:mm" locale="pt_BR"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText>
+				</p:column>
+
+
+
+				<p:column width="10%" style="text-align: center">
+					<p:button icon=" ui-icon-search"
+						outcome="/compromissos/CadastroCompromisso" title="Visualizar">
+						<f:param value="#{compromisso.id}" name="compromisso" />
+						<f:param value="visualizacao" name="visualizacao" />
+					</p:button>
+					<p:button icon="ui-icon-pencil"
+						outcome="/compromissos/CadastroCompromisso" title="Editar">
+						<f:param value="#{compromisso.id}" name="compromisso" />
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="dialogExcluir.show()" update=":frm:dialogExcluir"
+						process="@this">
+						<f:setPropertyActionListener
+							target="#{pesquisaCompromissoBean.compromisso}"
+							value="#{compromisso}" />
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+			<p:confirmDialog widgetVar="dialogExcluir" id="dialogExcluir"
+				header="Confirmação de Exclusão"
+				message="Deseja realmente excluir o compromisso número #{pesquisaCompromissoBean.compromisso.id}?">
+
+				<p:commandButton value="Sim"
+					action="#{pesquisaCompromissoBean.excluir}"
+					update=":frm:tabelaCompromisso" process="@this"
+					oncomplete="dialogExcluir.hide();" />
+				<p:commandButton value="Não"
+					oncomplete="dialogExcluir.hide(); return false;" />
+
+			</p:confirmDialog>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,159 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="dummy" />
+		<f:event listener="#{graficoAtividadesBean.preRender}"
+			type="preRenderView" />
+		<f:event listener="#{graficoCompromissosBean.preRender}"
+			type="preRenderView" />
+		<f:event listener="#{informacoesBean.inicializar}"
+			type="preRenderView" />
+		
+		<f:event listener="#{lembretesBean.inicializar}" type="preRenderView" />
+		
+	</f:metadata>
+
+	<ui:define name="titulo">Página Inicial</ui:define>
+
+	<ui:define name="corpo">
+
+		<p:panelGrid styleClass="semBorda2" columns="6"
+			style="margin-left: 90px">
+			<p:outputLabel value="Data Corrente: " />
+			<h:outputText value="#{informacoesBean.dataCorrente}">
+				<f:convertDateTime pattern="dd/MM/yyyy - HH:mm" locale="pt_BR"
+					timeZone="America/Sao_Paulo" />
+			</h:outputText>
+		</p:panelGrid>
+
+		<p:lineChart value="#{graficoAtividadesBean.model}"
+			style="height: 250px" title="Atividades Agendadas" animate="true"
+			legendPosition="e" minY="0" maxY="4"
+			yaxisLabel="Quantidade de atividades" />
+
+		<p:separator />
+		<br />
+
+		<p:lineChart value="#{graficoCompromissosBean.model}"
+			style="height: 250px" title="Compromissos Agendados" animate="true"
+			legendPosition="e" minY="0" maxY="4"
+			yaxisLabel="Quantidade de compromissos"
+			seriesColors="66cc66, 93b75f, E7E658, cc6666" />
+		<br />
+
+		<h:form target="_blank">
+			<p:dataTable style="margin-left: 1250; width: 20%"
+				value="#{informacoesBean.ultimaSolicitacao}" var="ultima"
+				emptyMessage="Nenhuma Solicitação enviada.">
+				<f:facet name="header">
+					<h:outputText value="Imprimir última solicitação." />
+				</f:facet>
+				<p:column style="text-align: center">
+					<h:outputText value="Solicitação número #{ultima.id}." />
+				</p:column>
+				<p:column style="text-align: center" width="6%">
+					<p:commandButton icon="ui-icon-print" title="Imprimir" ajax="false"
+						action="#{informacoesBean.emitir}"
+						disabled="#{!seguranca.emitirSolicitacaoPermitido}" />
+				</p:column>
+			</p:dataTable>
+
+			<p:dialog widgetVar="infoDialog" id="infoDialog" resizable="false"
+				closable="false" draggable="false" modal="true"
+				visible="#{lembretesBean.exiba}" appendToBody="@(body)"
+				header="Lembretes">
+
+				<p:dataTable id="tabela" style="margin-top: 5px"
+					value="#{lembretesBean.proximosCompromissos}" var="comp"
+					emptyMessage="Você não tem compromissos próximos.">
+					
+					<f:facet name="header">
+						<h:outputText value="Próximos compromissos (PRIVADOS)"/>
+					</f:facet>
+
+					<p:column headerText="Código">
+						<h:outputLabel value="#{comp.id}" />
+					</p:column>
+
+					<p:column headerText="Data do Compromisso">
+						<h:outputLabel value="#{comp.dataCompromisso}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Horário">
+						<h:outputLabel value="#{comp.horario}">
+							<f:convertDateTime pattern="HH:mm" locale="pt_BR" timeZone="America/Sao_Paulo" />
+						</h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Descrição">
+						<h:outputLabel value="#{comp.descricao}" />
+					</p:column>
+
+					<p:column>
+						<p:button icon="ui-icon-search"
+							outcome="/compromissos/CadastroCompromisso">
+							<f:param name="compromisso" value="#{comp.id}" />
+							<f:param name="visualizacao" />
+						</p:button>
+					</p:column>
+
+				</p:dataTable>
+				<br/>
+				<br/>
+				
+				<p:dataTable id="tabela2" style="margin-top: 5px"
+					value="#{lembretesBean.proximosCompromissosPublicos}" var="comp"
+					emptyMessage="Você não tem compromissos próximos.">
+					
+					<f:facet name="header">
+						<h:outputText value="Próximos compromissos (PÚBLICOS)"/>
+					</f:facet>
+
+					<p:column headerText="Código">
+						<h:outputLabel value="#{comp.id}" />
+					</p:column>
+
+					<p:column headerText="Data do Compromisso">
+						<h:outputLabel value="#{comp.dataCompromisso}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Horário">
+						<h:outputLabel value="#{comp.horario}">
+							<f:convertDateTime pattern="HH:mm" locale="pt_BR" timeZone="America/Sao_Paulo" />
+						</h:outputLabel>
+					</p:column>
+
+					<p:column headerText="Descrição">
+						<h:outputLabel value="#{comp.descricao}" />
+					</p:column>
+
+					<p:column>
+						<p:button icon="ui-icon-search"
+							outcome="/compromissos/CadastroCompromisso">
+							<f:param name="compromisso" value="#{comp.id}" />
+							<f:param name="visualizacao" />
+						</p:button>
+					</p:column>
+
+				</p:dataTable>
+				
+				<br />
+				<p:commandButton value="Continuar"
+					oncomplete="infoDialog.hide(); return false;" />
+
+			</p:dialog>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

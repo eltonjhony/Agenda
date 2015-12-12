@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:tabView style="margin-top: 20px">
+
+		<p:tab title="Contato Cadastrado">
+			<p:panelGrid id="painel1" columnClasses="rotulo" columns="2"
+				style="margin-top: 10px" styleClass="semBorda">
+
+				<p:selectOneMenu value="#{cadastroCompromissoBean.novoContato}"
+					filter="true">
+					<f:selectItem itemLabel="Selecione um Contato" />
+					<f:selectItems
+						value="#{cadastroCompromissoBean.contatosCadastrados}" var="cont"
+						itemLabel="#{cont.nome}" itemValue="#{cont}" />
+				</p:selectOneMenu>
+				<p:commandButton value="Adicionar"
+					action="#{cadastroCompromissoBean.adicionarContato}"
+					process="painel1" update="tabelaContato :mensagem"
+					disabled="#{cadastroCompromissoBean.compromisso.visualizando}" />
+			</p:panelGrid>
+
+			<p:dataTable style="margin-top: 10px"
+				value="#{cadastroCompromissoBean.contatosAdicionados}" var="contato"
+				id="tabelaContato" emptyMessage="Nenhum contato adicionado.">
+
+				<p:column headerText="Nome" style="text-align: center">
+					<h:outputText value="#{contato.contato.nome}" />
+				</p:column>
+				
+				<p:column headerText="E-mail" style="text-align: center">
+					<h:outputText value="#{contato.email}" />
+				</p:column>
+				
+				<p:column headerText="Telefone" style="text-align: center">
+					<h:outputText value="#{contato.telefone}" />
+				</p:column>
+				
+				<p:column headerText="Celular" style="text-align: center">
+					<h:outputText value="#{contato.celular}" />
+				</p:column>
+				
+				<p:column headerText="" style="text-align: center">
+					<p:commandButton action="#{cadastroCompromissoBean.removerContato}" 
+						process="@this" update="tabelaContato :msg" icon="ui-icon-trash" >
+						<f:setPropertyActionListener target="#{cadastroCompromissoBean.formaContatoSelecionado}" 
+							value="#{contato}"/>
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:tab>
+
+
+
+		<p:tab title="Contato não Cadastrado">
+		
+			<p:panelGrid id="painel2" 
+				columns="4" style="margin-top: 10px" styleClass="semBorda">
+				
+				<h:panelGroup>
+					<p:outputLabel value="Nome"/>
+					<p:inputText style="margin-left: 5px" size="50" value="#{cadastroCompromissoBean.formaContato.nome}"/>
+				</h:panelGroup>
+				
+				<h:panelGroup>
+					<p:outputLabel value="E-mail"/>
+					<p:inputText  style="margin-left: 5px" size="50" value="#{cadastroCompromissoBean.formaContato.email}"/>
+				</h:panelGroup>
+				
+				<h:panelGroup>
+					<p:outputLabel value="Telefone"/>
+					<p:inputMask mask="(99)9999-9999"  style="margin-left: 5px" size="10" 
+						value="#{cadastroCompromissoBean.formaContato.telefone}"/>
+				</h:panelGroup>
+				
+				<h:panelGroup>
+					<p:outputLabel value="Celular"/>
+					<p:inputMask mask="(99)99999-9999"  style="margin-left: 5px" size="10"
+						value="#{cadastroCompromissoBean.formaContato.celular}"/>
+					<p:commandButton value="Adicionar" style="margin-left: 20px"
+						action="#{cadastroCompromissoBean.adicionarFormaContato}" update="tabelaFormaContato painel2"
+						process="painel2" disabled="#{cadastroCompromissoBean.compromisso.visualizando}"/>
+						
+				</h:panelGroup>
+				
+			</p:panelGrid>
+			
+			<p:dataTable style="margin-top: 10px"
+				value="#{cadastroCompromissoBean.formasContatos}" var="contato"
+				id="tabelaFormaContato" emptyMessage="Nenhum contato adicionado.">
+
+				<p:column headerText="Nome" style="text-align: center">
+					<h:outputText value="#{contato.nome}" />
+				</p:column>
+				
+				<p:column headerText="E-mail" style="text-align: center">
+					<h:outputText value="#{contato.email}" />
+				</p:column>
+				
+				<p:column headerText="Telefone" style="text-align: center">
+					<h:outputText value="#{contato.telefone}" />
+				</p:column>
+				
+				<p:column headerText="Celular" style="text-align: center">
+					<h:outputText value="#{contato.celular}" />
+				</p:column>
+				
+				<p:column headerText="" style="text-align: center">
+					<p:commandButton action="#{cadastroCompromissoBean.removerFormaContato}" 
+						process="@this" update="tabelaFormaContato :msg" icon="ui-icon-trash" >
+						<f:setPropertyActionListener target="#{cadastroCompromissoBean.formaContato}" value="#{contato}"/>
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:tab>
+
+	</p:tabView>
+
+
+
+
+</ui:composition>

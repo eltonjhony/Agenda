@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title><ui:insert name="titulo">Titulo da pagina</ui:insert></title>
+	<p:growl id="msg" life="5000" />
+	<h:outputStylesheet library="css" name="sistema.css"/>
+	<h:outputScript library="js" name="scripts.js"/>
+</h:head>
+
+<h:body>
+	
+	<p:ajaxStatus styleClass="ajax-status">
+		<f:facet name="start">
+			<h:graphicImage library="images" name="loading.gif" />
+		</f:facet>
+		<f:facet name="complete">
+			<h:outputText value="" />
+		</f:facet>
+	</p:ajaxStatus>
+
+	<div style="float: left">
+		<h:link outcome="/Home.xhtml">
+			<h:graphicImage library="images" name="fama.png" styleClass="logo"/>
+		</h:link>
+	</div>
+	
+	<header>
+
+		<div style="margin-left: 15px">
+			<span style="float: left; height: 30px; line-height: 30px; margin-right: 60px">
+				<h:outputText value="Olá #{seguranca.nomeUsuario}!" styleClass="nomeUsuario"/>
+			</span>
+		</div>
+
+		<div style="float: right; margin-right: 300px">
+			
+			<h:form style="display: inline-block">
+					<p:menubar styleClass="menu-sistema">
+						<p:submenu label="Cadastros">
+							<p:menuitem value="Usuarios" outcome="/usuarios/PesquisaUsuarios"/>
+							<p:menuitem value="Contatos" outcome="/contatos/PesquisaContatos"/>
+						</p:submenu>
+						<p:submenu label="Agenda">
+							<p:menuitem value="Novo compromisso" outcome="/compromissos/CadastroCompromisso"/>
+							<p:menuitem value="Pesquisar compromissos" outcome="/compromissos/PesquisaCompromissos"/>
+							<p:separator/>
+							<p:menuitem value="Nova atividade" outcome="/atividades/CadastroAtividade.xhtml"/>
+							<p:menuitem value="Pesquisar atividades" outcome="/atividades/PesquisaAtividades.xhtml	"/>
+						</p:submenu>
+						<p:submenu label="Solicitações">
+							<p:menuitem value="Solicitação de Saída" outcome="/SolicitacaoSaida.xhtml"/>
+							<p:menuitem value="Pesquisar Solicitações" outcome="/PesquisaSolicitacaoSaida.xhtml"/>
+						</p:submenu>
+						<p:submenu label="Recados">
+							<p:menuitem value="Enviar Recado" outcome="/recados/CadastroRecados.xhtml"/>
+						</p:submenu>
+						<p:submenu label="Documentos">
+							<p:menuitem value="Uso de Imagem" outcome="/documentos/UsoImagem.xhtml"/>
+							<p:menuitem value="Oficios" outcome="/documentos/Oficios.xhtml"/>
+							<p:menuitem value="Agradecimento de Doações" outcome="/documentos/AgradecimentosDoacao.xhtml"/>
+							<p:menuitem value="Termo de Adesão Trabalho Voluntário" outcome="/documentos/EmissaoTermoAdesao.xhtml"/>
+						</p:submenu>
+						<p:submenu label="Relatorios">
+							<p:submenu label="Atividades">
+								<p:menuitem value="Atividade Interna" outcome="/relatorios/RelatorioAtividadeInterna.xhtml"/>
+								<p:menuitem value="Atividade Externa" outcome="/relatorios/RelatorioAtividadeExterna.xhtml"/>
+							</p:submenu>
+							<p:menuitem value="Compromissos" outcome="/relatorios/RelatorioCompromisso.xhtml"/>
+							<p:menuitem value="Contatos" outcome="/relatorios/RelatorioContatos.xhtml"/>
+							<p:submenu label="Log de Acesso">
+								<p:menuitem value="Exclusão" outcome="/relatorios/RelatorioLog.xhtml"/>
+							</p:submenu>
+							<p:submenu label="Solicitações">
+								<p:menuitem value="Solicitações de Saída" outcome="/relatorios/RelatorioSolicitacaoSaida.xhtml"/>
+							</p:submenu>
+						</p:submenu>
+						<p:menuitem value="Sair"  url="/j_spring_security_logout" style="margin-left: 15px"/>
+						
+					</p:menubar>
+				
+				
+			</h:form>
+		
+		</div>
+	
+	</header>
+	
+
+	<div id="conteudo">
+		<ui:insert name="corpo" />
+	</div>
+
+	<p:separator style="margin-top: 20px" />
+
+	<footer>
+		Sistema para agendamento de compromissos e atividades. Todos os direitos reservados - Copyright © 2014.
+		- <a href="http://www.famacultural.com.br" target="_blank">www.famacultural.com.br</a>
+	</footer>
+	
+</h:body>
+</html>

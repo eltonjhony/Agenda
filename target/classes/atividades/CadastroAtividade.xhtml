@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:o="http://omnifaces.org/ui"
+	  template="/WEB-INF/template/LayoutPadrao.xhtml">
+	  
+	  <f:metadata>
+	  	<f:event listener="#{cadastroAtividadeBean.inicializar}" type="preRenderView"/>
+	  	<o:viewParam name="atividade" value="#{cadastroAtividadeBean.atividade}"/>
+	  	<o:viewParam name="visualizacao" value="#{cadastroAtividadeBean.atividade.visualizacao}"/>
+	  </f:metadata>
+	  
+	 
+	  <ui:define name="titulo">#{cadastroAtividadeBean.editando ? 'Edição de Atividade' : 'Nova atividade'}</ui:define>
+	  
+	  <ui:define name="corpo">
+	  	
+	  	<h1>#{cadastroAtividadeBean.editando ? 'Edição de Atividade' : 'Nova atividade'}</h1>
+	  	<p:messages id="mensagem" closable="true"/>
+	  	<h:form>
+	  	
+		  	<ui:include src="/WEB-INF/template/atividades/BotoesAtividades.xhtml"/>
+		  	
+		  	<ui:include src="/WEB-INF/template/atividades/CapaAtividades.xhtml"/>
+		  	
+		  	<p:tabView style="margin-top: 20px; width:100%">
+		  	
+		  		<p:tab title="Contato">
+		  		
+		  			<ui:include src="/WEB-INF/template/atividades/ContatosAtividades.xhtml"/>
+		  		
+		  		</p:tab>
+		  		
+		  		<p:tab title="Colaborador">
+		  		
+		  			<ui:include src="/WEB-INF/template/atividades/ColaboradoresAtividades.xhtml"/>
+		  		
+		  		</p:tab>
+		  	
+		  	</p:tabView>
+	  	
+	  	</h:form>
+	  	  
+	  </ui:define>
+
+</ui:composition>

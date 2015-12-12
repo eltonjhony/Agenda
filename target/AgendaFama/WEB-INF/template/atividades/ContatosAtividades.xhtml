@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:tabView >
+
+		<p:tab title="Contato Cadastrado">
+			<p:panelGrid id="painel1" columnClasses="rotulo" columns="2"
+				 styleClass="semBorda">
+
+				<p:selectOneMenu
+					filter="true" value="#{cadastroAtividadeBean.novoContato}">
+					<f:selectItem itemLabel="Selecione um Contato" />
+					<f:selectItems value="#{cadastroAtividadeBean.contatosCadastrados}"
+						var="cont" itemValue="#{cont}" itemLabel="#{cont.nome}"/>
+				</p:selectOneMenu>
+				<p:commandButton value="Adicionar" action="#{cadastroAtividadeBean.adicionarContato}"
+					process="painel1" update="tabelaContato" 
+					disabled="#{cadastroAtividadeBean.atividade.visualizando}"/>
+			</p:panelGrid>
+
+			<p:dataTable style="margin-top: 10px"
+		
+				id="tabelaContato" emptyMessage="Nenhum contato adicionado."
+				value="#{cadastroAtividadeBean.contatosAdicionados}" var="cont">
+
+				<p:column headerText="Nome" style="text-align: center">
+					<h:outputText value="#{cont.contato.nome}"/>
+				</p:column>
+
+				<p:column headerText="E-mail" style="text-align: center">
+					<h:outputText value="#{cont.email}"/>
+				</p:column>
+
+				<p:column headerText="Telefone" style="text-align: center">
+					<h:outputText value="#{cont.telefone}"/>
+				</p:column>
+
+				<p:column headerText="Celular" style="text-align: center">
+					<h:outputText value="#{cont.celular}"/>
+				</p:column>
+				
+				<p:column headerText="" style="text-align: center">
+					<p:commandButton action="#{cadastroAtividadeBean.removerContato}" 
+						process="@this" update="tabelaContato :msg" icon="ui-icon-trash" >
+						<f:setPropertyActionListener target="#{cadastroAtividadeBean.formaContato}" 
+							value="#{cont}"/>
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:tab>
+
+
+
+		<p:tab title="Contato não Cadastrado">
+
+			<p:panelGrid id="painel2" columns="4" style="margin-top: 10px"
+				styleClass="semBorda">
+
+				<h:panelGroup>
+					<p:outputLabel value="Nome" />
+					<p:inputText style="margin-left: 5px" size="50"
+						value="#{cadastroAtividadeBean.formaContato.nome}"/>
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<p:outputLabel value="E-mail" />
+					<p:inputText style="margin-left: 5px" size="50" 
+						value="#{cadastroAtividadeBean.formaContato.email}"/>
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<p:outputLabel value="Telefone" />
+					<p:inputMask mask="(99)9999-9999" style="margin-left: 5px"
+						size="10" value="#{cadastroAtividadeBean.formaContato.telefone}"/>
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<p:outputLabel value="Celular" />
+					<p:inputMask mask="(99)99999-9999" style="margin-left: 5px"
+						size="10" value="#{cadastroAtividadeBean.formaContato.celular}" />
+						
+					<p:commandButton value="Adicionar" style="margin-left: 10px" 
+						action="#{cadastroAtividadeBean.adicionarFormaContato}" 
+						update="tabelaFormaContato painel2" process="painel2"
+						disabled="#{cadastroAtividadeBean.atividade.visualizando}"/>
+
+				</h:panelGroup>
+
+			</p:panelGrid>
+
+			<p:dataTable style="margin-top: 10px"
+				id="tabelaFormaContato" emptyMessage="Nenhum contato adicionado."
+				value="#{cadastroAtividadeBean.formasContatos}" var="formas">
+
+				<p:column headerText="Nome" style="text-align: center">
+					<h:outputText value="#{formas.nome}"/>
+				</p:column>
+
+				<p:column headerText="E-mail" style="text-align: center">
+					<h:outputText value="#{formas.email}"/>
+				</p:column>
+
+				<p:column headerText="Telefone" style="text-align: center">
+					<h:outputText value="#{formas.telefone}"/>
+				</p:column>
+
+				<p:column headerText="Celular" style="text-align: center">
+					<h:outputText value="#{formas.celular}"/>
+				</p:column>
+				
+				<p:column headerText="" style="text-align: center">
+					<p:commandButton action="#{cadastroAtividadeBean.removerFormaContato}" 
+						process="@this" update="tabelaFormaContato :msg" icon="ui-icon-trash" >
+						<f:setPropertyActionListener target="#{cadastroAtividadeBean.formaContato}" value="#{formas}"/>
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:tab>
+
+	</p:tabView>
+
+
+</ui:composition>

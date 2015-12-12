@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	<f:metadata>
+		<f:event listener="#{emissaoAgradecimentoBean.inicializar}"
+			type="preRenderView" />
+	</f:metadata>
+
+	<ui:define name="titulo">Catálogo de Agradecimento de Doações disponíveis para Impressão</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Catálogo de Agradecimento de Doações disponíveis para Impressão</h1>
+		<h:form target="_blank">
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/documentos/AgradecimentosDoacao.xhtml" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:dataTable style="margin-top: 20px" paginator="true" rows="5"
+				emptyMessage="Nenhum agradecimento disponível"
+				value="#{emissaoAgradecimentoBean.listaAgradecimentos}" var="agra">
+
+				<f:facet name="header">
+					<h:outputText value="Agradecimentos disponíveis" />
+				</f:facet>
+
+				<p:column headerText="Nome do doador">
+					<h:outputText value="#{agra.nome}" />
+				</p:column>
+
+				<p:column style="text-align: center; width: 10%">
+					<p:commandButton icon="ui-icon-print" title="Imprimir"
+						action="#{emissaoAgradecimentoBean.emitir}" ajax="false" process="@form">
+						<f:setPropertyActionListener target="#{emissaoAgradecimentoBean.agradecimento}"
+							value="#{agra}" />
+					</p:commandButton>
+					<p:button icon="ui-icon-pencil" title="Editar"
+						outcome="/documentos/AgradecimentosDoacao">
+						<f:param name="agradecimento" value="#{agra.id}" />
+					</p:button>
+
+				</p:column>
+
+			</p:dataTable>
+			
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

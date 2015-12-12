@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	<f:metadata>
+		<o:viewParam name="termo" value="#{termoAdesaoBean.adesao}" />
+	</f:metadata>
+
+
+
+	<ui:define name="titulo">Emissão de Termo de Adesão para Trabalhos Voluntários</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Emissão de Termo de Adesão para Trabalhos Voluntários</h1>
+		<h:form>
+			<p:messages autoUpdate="true" closable="true" />
+			<p:toolbar style="margin-top: 20px">
+
+				<p:toolbarGroup>
+					<p:button value="Novo"
+						outcome="/documentos/EmissaoTermoAdesao.xhtml" />
+					<p:separator />
+					<p:commandButton value="Emitir" action="#{termoAdesaoBean.salvar}"
+						update="@form" process="@form" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Buscar Catálogo" icon="ui-icon-search"
+						outcome="/documentos/ImpressaoTermoAdesao.xhtml" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:tabView style="margin-top: 20px; width: 100%">
+
+				<p:tab title="Dados do Voluntário">
+
+					<p:panelGrid columnClasses="rotulo,campo" columns="2"
+						style="width: 100%">
+
+						<p:outputLabel value="Nome" />
+						<p:inputText value="#{termoAdesaoBean.adesao.nome}" size="50"
+							maxlength="50" label="Nome" />
+
+						<p:outputLabel value="Estado Civil" />
+						<p:inputText value="#{termoAdesaoBean.adesao.estadoCivil}"
+							size="10" maxlength="50" label="Estado Civil" />
+
+						<p:outputLabel value="Profissão" />
+						<p:inputText value="#{termoAdesaoBean.adesao.profissao}" size="30"
+							maxlength="50" label="Profissão" />
+
+						<p:outputLabel value="RG" />
+						<p:inputText value="#{termoAdesaoBean.adesao.rg}" size="10"
+							maxlength="50" label="RG" />
+
+						<p:outputLabel value="CPF" />
+						<p:inputMask value="#{termoAdesaoBean.adesao.cpf}" size="10"
+							maxlength="50" label="CPF" mask="999.999.999-99" />
+
+						<p:outputLabel value="Endereço" />
+						<p:inputText value="#{termoAdesaoBean.adesao.endereco}" size="50"
+							maxlength="50" label="Endereço" />
+
+					</p:panelGrid>
+
+				</p:tab>
+
+				<p:tab title="Dados da Execução">
+
+					<p:panelGrid columnClasses="rotulo" columns="2" style="width: 100%">
+						
+						<p:outputLabel value="Período" />
+						<h:panelGroup>
+							<p:inputText value="#{termoAdesaoBean.adesao.periodo}" size="80"
+								maxlength="80" label="Período" />
+							<h:outputText value="(Siga o Exemplo ->) período de 03 e 04 de outubro, das 16h00 às 17h30 horas."/>
+						</h:panelGroup>
+
+						<p:outputLabel value="Função" />
+						<p:inputText value="#{termoAdesaoBean.adesao.funcao}" size="200"
+							maxlength="100" label="Função" />
+
+
+					</p:panelGrid>
+
+
+				</p:tab>
+
+			</p:tabView>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

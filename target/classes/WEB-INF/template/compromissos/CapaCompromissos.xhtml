@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:tabView style="margin-top: 20px">
+
+		<p:tab title="Dados Principais">
+
+			<p:panelGrid style="width: 100%" columnClasses="rotulo" columns="4">
+
+				<p:outputLabel value="Data do compromisso" for="data" />
+				<p:calendar id="data" locale="pt" size="7"
+					value="#{cadastroCompromissoBean.compromisso.dataCompromisso}" />
+
+				<p:outputLabel value="Horário" for="hora" />
+				<p:calendar id="hora" pattern="HH:mm" locale="pt" timeOnly="true"
+					size="5" value="#{cadastroCompromissoBean.compromisso.horario}" />
+
+				<p:outputLabel value="Descrição" for="descricao" />
+				<p:inputText id="descricao" size="150"
+					value="#{cadastroCompromissoBean.compromisso.descricao}" />
+
+				
+				<p:outputLabel value="Visibilidade"/>
+				<p:selectOneMenu value="#{cadastroCompromissoBean.compromisso.visibilidade}">
+					<f:selectItems value="#{cadastroCompromissoBean.visibilidades}"
+						var="visi" itemValue="#{visi}" itemLabel="#{visi.descricao}"/>
+				</p:selectOneMenu>
+				
+
+				<p:outputLabel value="Departamento" for="departamento" />
+				<h:panelGroup>
+				<p:selectOneMenu id="departamento"
+					value="#{cadastroCompromissoBean.compromisso.departamento}">
+					<f:selectItem itemLabel="Selecione o departamento" />
+					<f:selectItems
+						value="#{cadastroCompromissoBean.departamentosRaizes}" var="dep"
+						itemValue="#{dep}" itemLabel="#{dep.descricao}" />
+					<p:ajax
+						listener="#{cadastroCompromissoBean.carregarSubDepartamentos}"
+						update="subDepartamento" />
+				</p:selectOneMenu>
+				<h:outputText style="margin-left: 5px; margin-top: 5px" 
+					value="Selecione o departamento o qual se destina este compromisso."/>
+				</h:panelGroup>
+				<p:spacer />
+				<p:spacer />
+
+				<p:outputLabel value="Subdepartamento" for="subDepartamento" />
+				<p:selectOneMenu id="subDepartamento"
+					value="#{cadastroCompromissoBean.compromisso.subDepartamento}">
+					<f:selectItem itemLabel="Selecione o subdepartamento" />
+					<f:selectItems value="#{cadastroCompromissoBean.subdepartamentos}"
+						var="subdep" itemValue="#{subdep}" itemLabel="#{subdep.descricao}" />
+				</p:selectOneMenu>
+
+				<p:spacer />
+				<p:spacer />
+
+				<p:outputLabel value="Local" for="local" />
+				<p:inputText id="local" size="50"
+					value="#{cadastroCompromissoBean.compromisso.local}" />
+
+				<p:spacer />
+				<p:spacer />
+
+				<p:outputLabel value="Observação" for="observacao" />
+				<p:inputTextarea id="observacao" style="height: 90px; width: 100%"
+					value="#{cadastroCompromissoBean.compromisso.observacao}" />
+
+
+			</p:panelGrid>
+
+		</p:tab>
+		
+		<p:tab title="Dados Extras"	
+			rendered="#{cadastroCompromissoBean.editando}">
+			
+			<p:panelGrid style="width: 100%" columnClasses="rotulo" 
+				columns="2" >
+				
+				<p:outputLabel value="Cadastrado por:"/>
+				<h:outputText value="#{cadastroCompromissoBean.compromisso.usuario.nome}"/>
+				
+				<p:outputLabel value="Data da Operação:"/>
+				<h:outputText value="#{cadastroCompromissoBean.compromisso.dataCriacao}">
+					<f:convertDateTime pattern="dd/MM/yyyy - HH:mm" locale="pt_BR"/>
+				</h:outputText>
+			
+			</p:panelGrid>
+			
+		</p:tab>
+
+	</p:tabView>
+
+
+
+
+</ui:composition>

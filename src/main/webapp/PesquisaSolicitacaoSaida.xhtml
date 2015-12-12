@@ -1,0 +1,112 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="/WEB-INF/template/LayoutPadrao.xhtml">
+	  
+	  <f:metadata>
+	  	<f:event listener="#{pesquisaSolicitacaoBean.inicializar}" type="preRenderView"/>
+	  </f:metadata>
+
+	  <ui:define name="titulo">Pesquisa de Solicitações de Saída</ui:define>
+	  
+	  <ui:define name="corpo">
+	  	
+	  	<h1>Pesquisa de Solicitações de Saída</h1>
+	  	<p:messages autoUpdate="true" closable="true"/>
+	  	<h:form id="frm">
+	  	
+	  		<p:toolbar style="margin-top: 20px">
+	  		
+	  			<p:toolbarGroup>
+	  				<p:commandButton value="Pesquisar" action="#{pesquisaSolicitacaoBean.pesquisar}" 
+	  					update="@form" process="@form"/>
+	  			</p:toolbarGroup>
+	  			
+	  			<p:toolbarGroup align="right">
+	  				<p:button value="Novo" outcome="/SolicitacaoSaida"/>
+	  			</p:toolbarGroup>
+	  			
+	  		</p:toolbar>
+	  		
+	  		<p:panelGrid style="margin-top: 20px; width: 100%" columnClasses="rotulo"
+	  			columns="2">
+	  		  			
+	  			<p:outputLabel value="Data da Solicitação"/>
+	  			<h:panelGroup>
+	  			<p:calendar size="7" locale="pt"
+	  				value="#{pesquisaSolicitacaoBean.filtro.dataDe}"/>
+	  			a
+	  			<p:calendar size="7" locale="pt"
+	  				value="#{pesquisaSolicitacaoBean.filtro.dataAte}"/>
+	  			</h:panelGroup>
+	  			
+	  			<p:outputLabel value="Colaborador"/>
+	  			<p:selectOneMenu value="#{pesquisaSolicitacaoBean.filtro.colaborador}">
+	  				<f:selectItem itemLabel="Selecione um Colaborador"/>
+	  				<f:selectItems value="#{pesquisaSolicitacaoBean.listaColaboradores}"
+	  					var="colaborador" itemValue="#{colaborador}" itemLabel="#{colaborador.nome}"/>
+	  			</p:selectOneMenu>
+	  			
+	  			
+	  		</p:panelGrid>
+	  		
+	  		<p:dataTable style="margin-top: 20px; width: 100%" paginator="true" paginatorAlwaysVisible="false"
+	  			emptyMessage="Nenhum registro encontrado." rows="9"
+	  			var="solicitacao" value="#{pesquisaSolicitacaoBean.listaSolicitacoes}"
+	  			id="tabelaSolicitacao">
+	  			
+	  			<f:facet name="header">
+	  				<h:outputText value="Listagem de Solicitações"/>
+	  			</f:facet>
+	  			
+	  			<p:column headerText="Nº da Solicitação" width="10%" style="text-align: center">
+	  				<h:outputText value="#{solicitacao.id}"/>
+	  			</p:column>
+	  			
+	  			<p:column headerText="Data de Saída" width="10%" style="text-align: center">
+	  				<h:outputText value="#{solicitacao.dataSolicitada}" >
+	  					<f:convertDateTime pattern="dd/MM/yyyy"/>
+	  				</h:outputText>
+	  			</p:column>
+	  			
+	  			<p:column headerText="Motivo" width="70%" >
+	  				<h:outputText value="#{solicitacao.motivo}"/>
+	  			</p:column>
+	  			
+	  			
+	  			<p:column width="10%" style="text-align: center">
+	  				<p:button icon="ui-icon-search" title="Visualizar"
+	  					outcome="/SolicitacaoSaida">
+	  					<f:param value="#{solicitacao.id}" name="solicitacao"/>
+	  					<f:param value="visualizacao" name="visualizacao"/>
+	  				</p:button>
+	  				<p:button icon="ui-icon-pencil" title="Editar"
+	  					outcome="/SolicitacaoSaida">
+	  					<f:param value="#{solicitacao.id}" name="solicitacao"/>
+	  				</p:button>
+	  				<p:commandButton icon="ui-icon-trash" title="Excluir"
+	  					update=":frm:dialogExcluir" oncomplete="dialogExcluir.show()" >
+	  					<f:setPropertyActionListener target="#{pesquisaSolicitacaoBean.solicitacaoSelecionada}" value="#{solicitacao}"/>  
+	  				</p:commandButton>
+	  			</p:column>
+	 
+	  		</p:dataTable>
+	  		
+	  		<p:confirmDialog widgetVar="dialogExcluir" id="dialogExcluir"
+	  			header="Confirmação de Exclusão"
+	  			message="Deseja realmente excluir esta solicitação ?">
+	  			
+	  			<p:commandButton value="Sim"  oncomplete="dialogExcluir.hide()"
+	  				update=":frm:tabelaSolicitacao" action="#{pesquisaSolicitacaoBean.excluir}" />
+	  			
+	  			<p:commandButton value="Não" oncomplete="dialogExcluir.hide(); return false;"/>
+	  		
+	  		</p:confirmDialog>
+	  	
+	  	</h:form>
+	  	  
+	  </ui:define>
+
+</ui:composition>

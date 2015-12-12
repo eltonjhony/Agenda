@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/LayoutPadrao.xhtml">
+
+	<ui:define name="titulo">Relatório de Contatos</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Relatório de Contatos</h1>
+
+		<h:form target="_blank">
+			<p:toolbar style="margin-top: 20px">
+
+				<p:toolbarGroup>
+					<p:commandButton value="Emitir" ajax="false"
+						action="#{relatorioContatoBean.emitir}" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:panelGrid style="margin-top: 20px; width:100%" columns="2"
+				columnClasses="rotulo">
+
+				<p:outputLabel value="Nome" />
+				<h:panelGroup>
+					<p:inputText size="30" 
+						value="#{relatorioContatoBean.filtro.nome}" />
+					<h:outputText style="margin-left: 5px" value="(Não utilize acentuação!)"/>
+				</h:panelGroup>
+				
+
+
+				<p:outputLabel value="Apelido" />
+				<h:panelGroup>
+					<p:inputText size="30"
+					value="#{relatorioContatoBean.filtro.apelido}" />
+					<h:outputText style="margin-left: 5px" value="(Não utilize acentuação!)"/>
+				</h:panelGroup>
+				
+
+				<p:outputLabel value="Tipo" />
+				<p:selectManyCheckbox value="#{relatorioContatoBean.filtro.tipoPessoa}">
+					<f:selectItems value="#{relatorioContatoBean.tipoPessoas}"
+						var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}"/>
+				</p:selectManyCheckbox>
+
+
+
+			</p:panelGrid>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
